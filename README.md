@@ -27,3 +27,5 @@ Raw Data -> `MarketFeedHandler` -> `MarketDataStream` -> `MatchingEngine` -> `Or
 - avgPrice: average cost basis of the position
 - realizedPnL: profit/loss from closed trades
 - lastMark: most recent market price (for unrealized PnL)
+
+## Build and Run examples in VS Code via `Tasks` (ctrl + shft + p)
