@@ -1,0 +1,204 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Compile MatchingEngine",
+            "type": "shell",
+            "command": "g++ MatchingEngine/MatchingEngine.cpp -o MatchingEngine/engine.exe"
+        },
+        {
+            "label": "Run Engine with inputs",
+            "type": "shell",
+            "command": "engine.exe < test_cases/${input:matchingEngineTests}",
+            "options": {
+                "cwd": "${workspaceFolder}\\MatchingEngine",
+                "shell": {
+                    "executable": "cmd.exe",
+                    "args": ["/c"]
+                }
+            },
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Compile MarketDataStream",
+            "type": "shell",
+            "command": "g++ MarketDataStream/DataStream.cpp -o MarketDataStream/streamer.exe"
+        },
+        {
+            "label": "Run MarketDataStream with inputs",
+            "type": "shell",
+            "command": "streamer.exe < test_cases/${input:marketDataTests}",
+            "options": {
+                "cwd": "${workspaceFolder}\\MarketDataStream",
+                "shell": {
+                    "executable": "cmd.exe",
+                    "args": ["/c"]
+                }
+            },
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Compile PositionPnLTracker",
+            "type": "shell",
+            "command": "g++ PositionPnLTracker/PositionTracker.cpp -o PositionPnLTracker/tracker.exe"
+        },
+        {
+            "label": "Run PositionPnLTracker with inputs",
+            "type": "shell",
+            "command": "tracker.exe < test_cases/${input:positionTrackerTests}",
+            "options": {
+                "cwd": "${workspaceFolder}\\PositionPnLTracker",
+                "shell": {
+                    "executable": "cmd.exe",
+                    "args": ["/c"]
+                }
+            },
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Compile MarketFeedHandler",
+            "type": "shell",
+            "command": "g++ MarketFeedHandler/FeedHandler.cpp -o MarketFeedHandler/handler.exe"
+        },
+        {
+            "label": "Run MarketFeedHandler with inputs",
+            "type": "shell",
+            "command": "handler.exe < test_cases/${input:feedHandlerTests}",
+            "options": {
+                "cwd": "${workspaceFolder}\\MarketFeedHandler",
+                "shell": {
+                    "executable": "cmd.exe",
+                    "args": ["/c"]
+                }
+            },
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Compile OrderLifeCycleTracker",
+            "type": "shell",
+            "command": "g++ OrderTracker/OrderTracker.cpp -o OrderTracker/tracker.exe"
+        },
+        {
+            "label": "Run OrderLifeCycleTracker with inputs",
+            "type": "shell",
+            "command": "tracker.exe < test_cases/${input:orderTrackerTests}",
+            "options": {
+                "cwd": "${workspaceFolder}\\OrderTracker",
+                "shell": {
+                    "executable": "cmd.exe",
+                    "args": ["/c"]
+                }
+            },
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            }
+        }
+    ],
+    "inputs": [
+        {
+            "id": "matchingEngineTests",
+            "type": "pickString",
+            "description": "Which input file do you want to use?",
+            "options": [
+                "default.txt",
+                "simple_match.txt",
+                "exact_match.txt",
+                "partial_fill.txt",
+                "price_priority.txt",
+                "no_match.txt",
+                "cancel_order.txt",
+                "multi_level_fill.txt",
+                "fifo_inside_same_price.txt",
+                "large_aggressive_order.txt"
+            ],
+            "default": "default.txt"
+        },
+        {
+            "id": "marketDataTests",
+            "type": "pickString",
+            "description": "Which input file do you want to use?",
+            "options": [
+                "default.txt",
+                "single_trade.txt",
+                "multi_trade_same_symbol.txt",
+                "uneven_quantities.txt",
+                "multi_symbols.txt",
+                "interleaved_printing.txt",
+                "symbol_no_trades.txt",
+                "stress.txt",
+                "no_quantity.txt",
+                "full_input.txt",
+            ],
+            "default": "default.txt"
+        },
+        {
+            "id": "positionTrackerTests",
+            "type": "pickString",
+            "description": "Which input file do you want to use?",
+            "options": [
+                "default.txt",
+                "long_position.txt",
+                "averaging_into_long.txt",
+                "partial_close_long.txt",
+                "full_close.txt",
+                "flip_long_to_short.txt",
+                "short_position.txt",
+                "cover_short.txt",
+                "flip_short_to_long.txt",
+                "no_position.txt",
+                "mixed_trades.txt"
+            ],
+            "default": "default.txt"
+        },
+        {
+            "id": "feedHandlerTests",
+            "type": "pickString",
+            "description": "Which input file do you want to use?",
+            "options": [
+                "default.txt",
+                "single_trade.txt",
+                "single_quote.txt",
+                "multi_trade_same_symbol.txt",
+                "trade_quote_same_symbol.txt",
+                "multi_symbols.txt",
+                "out_of_order.txt",
+                "edge_values.txt",
+                "high_precision_values.txt",
+                "large_volume_trade.txt"
+            ],
+            "default": "default.txt"
+        },
+        {
+            "id": "orderTrackerTests",
+            "type": "pickString",
+            "description": "Which input file do you want to use?",
+            "options": [
+                "default.txt",
+                "new_fill.txt",
+                "partial_fill.txt",
+                "cancel_before_fill.txt",
+                "cancel_partial_fill.txt",
+                "cancel_filled.txt",
+                "unknown_order_fill.txt",
+                "unknown_order_cancel.txt",
+                "multi_orders.txt",
+                "fill_more_than_qty.txt",
+                "seq_partial_fills.txt",
+            ],
+            "default": "default.txt"
+        }
+    ]
+}
