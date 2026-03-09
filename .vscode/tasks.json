@@ -105,7 +105,28 @@
                 "kind": "test",
                 "isDefault": true
             }
-        }
+        },
+        {
+            "label": "Compile RiskOffsetHedger",
+            "type": "shell",
+            "command": "g++ RiskOffset/OffsetHedger.cpp -o RiskOffset/hedger.exe"
+        },
+        {
+            "label": "Run RiskOffsetHedger with inputs",
+            "type": "shell",
+            "command": "hedger.exe < test_cases/${input:riskOffsetTests}",
+            "options": {
+                "cwd": "${workspaceFolder}\\RiskOffset",
+                "shell": {
+                    "executable": "cmd.exe",
+                    "args": ["/c"]
+                }
+            },
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            }
+        },
     ],
     "inputs": [
         {
@@ -197,6 +218,24 @@
                 "multi_orders.txt",
                 "fill_more_than_qty.txt",
                 "seq_partial_fills.txt",
+            ],
+            "default": "default.txt"
+        },
+        {
+            "id": "riskOffsetTests",
+            "type": "pickString",
+            "description": "Which input file do you want to use?",
+            "options": [
+                "default.txt",
+                "buy_sell_hedge.txt",
+                "sell_buy_hedge.txt",
+                "fractional_no_hedge.txt",
+                "fractional_hedge.txt",
+                "multi_level_buy.txt",
+                "multi_level_sell.txt",
+                "multi_level_hedge.txt",
+                "mixed_trades.txt",
+                "cancelling_hedges.txt"
             ],
             "default": "default.txt"
         }

@@ -2,7 +2,7 @@
 
 Example of how a trading system may flow...
 
-Raw Data -> `MarketFeedHandler` -> `MarketDataStream` -> `MatchingEngine` -> `OrderTracker`|`PositionPnLTracker` -> Risk/Limit Monitor
+Raw Data -> `MarketFeedHandler` -> `MarketDataStream` -> `MatchingEngine` -> `OrderTracker`|`PositionPnLTracker` -> `OffsetHedger` -> Risk/Limit Monitor
 
 ## Market Feed Handler
 - recieves raw market messages (trades, quotes, updates)
@@ -27,5 +27,9 @@ Raw Data -> `MarketFeedHandler` -> `MarketDataStream` -> `MatchingEngine` -> `Or
 - avgPrice: average cost basis of the position
 - realizedPnL: profit/loss from closed trades
 - lastMark: most recent market price (for unrealized PnL)
+
+## Offset Hedger
+- computes and hedges trades based on the risk for each
+- would then execute a Hedge trade
 
 ## Build and Run examples in VS Code via `Tasks` (ctrl + shft + p)
