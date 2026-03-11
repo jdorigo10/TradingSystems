@@ -1,0 +1,7 @@
+add_subdirectory(MarketFeedHandler)
+add_subdirectory(OrderBookBuilder)
+add_subdirectory(MarketDataStream)
+add_subdirectory(StrategyEngine)
+add_subdirectory(RiskManager)
+add_subdirectory(RateLimiter)
+add_subdirectory(OrderGateway)

@@ -2,16 +2,12 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Compile MarketFeedHandler",
+            "label": "Run entire Trading System with Side Systems",
+            "detail": "trading-system",
             "type": "shell",
-            "command": "g++ MarketFeedHandler/FeedHandler.cpp -o MarketFeedHandler/handler.exe"
-        },
-        {
-            "label": "Run MarketFeedHandler with inputs",
-            "type": "shell",
-            "command": "handler.exe < test_cases/${input:feedHandlerTests}",
+            "command": "trading_system.exe < ../build_inputs/${input:tradingSystemTests}",
             "options": {
-                "cwd": "${workspaceFolder}\\MarketFeedHandler",
+                "cwd": "${workspaceFolder}\\trading-system\\build",
                 "shell": {
                     "executable": "cmd.exe",
                     "args": ["/c"]
@@ -23,16 +19,12 @@
             }
         },
         {
-            "label": "Compile MatchingEngine",
+            "label": "Run Market Feed Handler standalone",
+            "detail": "trading-system -> main-pipeline -> step 1",
             "type": "shell",
-            "command": "g++ MatchingEngine/MatchingEngine.cpp -o MatchingEngine/engine.exe"
-        },
-        {
-            "label": "Run Engine with inputs",
-            "type": "shell",
-            "command": "engine.exe < test_cases/${input:matchingEngineTests}",
+            "command": "market_feed_handler_tests.exe < ../build_inputs/${input:feedHandlerTests}",
             "options": {
-                "cwd": "${workspaceFolder}\\MatchingEngine",
+                "cwd": "${workspaceFolder}\\trading-system\\main-pipeline\\MarketFeedHandler\\tests\\build",
                 "shell": {
                     "executable": "cmd.exe",
                     "args": ["/c"]
@@ -44,16 +36,12 @@
             }
         },
         {
-            "label": "Compile MarketDataStream",
+            "label": "Run Order Book Builder standalone",
+            "detail": "trading-system -> main-pipeline -> step 2",
             "type": "shell",
-            "command": "g++ MarketDataStream/DataStream.cpp -o MarketDataStream/streamer.exe"
-        },
-        {
-            "label": "Run MarketDataStream with inputs",
-            "type": "shell",
-            "command": "streamer.exe < test_cases/${input:marketDataTests}",
+            "command": "order_book_builder_tests.exe < ../build_inputs/${input:bookBuilderTests}",
             "options": {
-                "cwd": "${workspaceFolder}\\MarketDataStream",
+                "cwd": "${workspaceFolder}\\trading-system\\main-pipeline\\OrderBookBuilder\\tests\\build",
                 "shell": {
                     "executable": "cmd.exe",
                     "args": ["/c"]
@@ -65,16 +53,12 @@
             }
         },
         {
-            "label": "Compile PositionPnLTracker",
+            "label": "Run Market Data Stream standalone",
+            "detail": "trading-system -> main-pipeline -> step 3",
             "type": "shell",
-            "command": "g++ PositionPnLTracker/PositionTracker.cpp -o PositionPnLTracker/tracker.exe"
-        },
-        {
-            "label": "Run PositionPnLTracker with inputs",
-            "type": "shell",
-            "command": "tracker.exe < test_cases/${input:positionTrackerTests}",
+            "command": "market_data_stream_tests.exe < ../build_inputs/${input:dataStreamTests}",
             "options": {
-                "cwd": "${workspaceFolder}\\PositionPnLTracker",
+                "cwd": "${workspaceFolder}\\trading-system\\main-pipeline\\MarketDataStream\\tests\\build",
                 "shell": {
                     "executable": "cmd.exe",
                     "args": ["/c"]
@@ -86,16 +70,12 @@
             }
         },
         {
-            "label": "Compile OrderLifeCycleTracker",
+            "label": "Run Strategy Engine standalone",
+            "detail": "trading-system -> main-pipeline -> step 4",
             "type": "shell",
-            "command": "g++ OrderTracker/OrderTracker.cpp -o OrderTracker/tracker.exe"
-        },
-        {
-            "label": "Run OrderLifeCycleTracker with inputs",
-            "type": "shell",
-            "command": "tracker.exe < test_cases/${input:orderTrackerTests}",
+            "command": "strategy_engine_tests.exe < ../build_inputs/${input:strategyEngineTests}",
             "options": {
-                "cwd": "${workspaceFolder}\\OrderTracker",
+                "cwd": "${workspaceFolder}\\trading-system\\main-pipeline\\StrategyEngine\\tests\\build",
                 "shell": {
                     "executable": "cmd.exe",
                     "args": ["/c"]
@@ -107,16 +87,12 @@
             }
         },
         {
-            "label": "Compile RiskOffsetHedger",
+            "label": "Run Risk Manager standalone",
+            "detail": "trading-system -> main-pipeline -> step 5",
             "type": "shell",
-            "command": "g++ RiskOffset/OffsetHedger.cpp -o RiskOffset/hedger.exe"
-        },
-        {
-            "label": "Run RiskOffsetHedger with inputs",
-            "type": "shell",
-            "command": "hedger.exe < test_cases/${input:riskOffsetTests}",
+            "command": "risk_manager_tests.exe < ../build_inputs/${input:riskManagerTests}",
             "options": {
-                "cwd": "${workspaceFolder}\\RiskOffset",
+                "cwd": "${workspaceFolder}\\trading-system\\main-pipeline\\RiskManager\\tests\\build",
                 "shell": {
                     "executable": "cmd.exe",
                     "args": ["/c"]
@@ -127,8 +103,153 @@
                 "isDefault": true
             }
         },
+        {
+            "label": "Run Rate Limiter standalone",
+            "detail": "trading-system -> main-pipeline -> step 6",
+            "type": "shell",
+            "command": "rate_limiter_tests.exe < ../build_inputs/${input:rateLimiterTests}",
+            "options": {
+                "cwd": "${workspaceFolder}\\trading-system\\main-pipeline\\RateLimiter\\tests\\build",
+                "shell": {
+                    "executable": "cmd.exe",
+                    "args": ["/c"]
+                }
+            },
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Run Order Gateway standalone",
+            "detail": "trading-system -> main-pipeline -> step 7",
+            "type": "shell",
+            "command": "order_gateway_tests.exe < ../build_inputs/${input:orderGatewayTests}",
+            "options": {
+                "cwd": "${workspaceFolder}\\trading-system\\main-pipeline\\OrderGateway\\tests\\build",
+                "shell": {
+                    "executable": "cmd.exe",
+                    "args": ["/c"]
+                }
+            },
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Run Order Tracker standalone",
+            "detail": "trading-system -> side-systems",
+            "type": "shell",
+            "command": "order_tracker_tests.exe < ../build_inputs/${input:orderTrackerTests}",
+            "options": {
+                "cwd": "${workspaceFolder}\\trading-system\\side-systems\\OrderTracker\\tests\\build",
+                "shell": {
+                    "executable": "cmd.exe",
+                    "args": ["/c"]
+                }
+            },
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Run Position & PnL standalone",
+            "detail": "trading-system -> side-systems",
+            "type": "shell",
+            "command": "position_pnl_tracker_tests.exe < ../build_inputs/${input:positionTrackerTests}",
+            "options": {
+                "cwd": "${workspaceFolder}\\trading-system\\side-systems\\PositionPnLTracker\\tests\\build",
+                "shell": {
+                    "executable": "cmd.exe",
+                    "args": ["/c"]
+                }
+            },
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Run Offset Hedger standalone",
+            "detail": "trading-system -> side-systems",
+            "type": "shell",
+            "command": "offset_hedger_tests.exe < ../build_inputs/${input:offsetHedgerTests}",
+            "options": {
+                "cwd": "${workspaceFolder}\\trading-system\\side-systems\\OffsetHedger\\tests\\build",
+                "shell": {
+                    "executable": "cmd.exe",
+                    "args": ["/c"]
+                }
+            },
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Run Trade Logger standalone",
+            "detail": "trading-system -> side-systems",
+            "type": "shell",
+            "command": "trade_logger_tests.exe < ../build_inputs/${input:tradeLoggerTests}",
+            "options": {
+                "cwd": "${workspaceFolder}\\trading-system\\side-systems\\TradeLogger\\tests\\build",
+                "shell": {
+                    "executable": "cmd.exe",
+                    "args": ["/c"]
+                }
+            },
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Run Latency Monitor standalone",
+            "detail": "trading-system -> side-systems",
+            "type": "shell",
+            "command": "latency_monitor.exe < ../build_inputs/${input:latencyMonitorTests}",
+            "options": {
+                "cwd": "${workspaceFolder}\\trading-system\\side-systems\\LatencyMonitor\\tests\\build",
+                "shell": {
+                    "executable": "cmd.exe",
+                    "args": ["/c"]
+                }
+            },
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Run Matching Engine standalone",
+            "detail": "standalone-component",
+            "type": "shell",
+            "command": "matching_engine_tests.exe < ../build_inputs/${input:matchingEngineTests}",
+            "options": {
+                "cwd": "${workspaceFolder}\\standalone-component\\MatchingEngine\\tests\\build",
+                "shell": {
+                    "executable": "cmd.exe",
+                    "args": ["/c"]
+                }
+            },
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            }
+        }
     ],
     "inputs": [
+        {
+            "id": "tradingSystemTests",
+            "type": "pickString",
+            "description": "Which input file do you want to use?",
+            "options": [
+                "default.txt"
+            ],
+            "default": "default.txt"
+        },
         {
             "id": "feedHandlerTests",
             "type": "pickString",
@@ -139,25 +260,16 @@
             "default": "default.txt"
         },
         {
-            "id": "matchingEngineTests",
+            "id": "bookBuilderTests",
             "type": "pickString",
             "description": "Which input file do you want to use?",
             "options": [
-                "default.txt",
-                "simple_match.txt",
-                "exact_match.txt",
-                "partial_fill.txt",
-                "price_priority.txt",
-                "no_match.txt",
-                "cancel_order.txt",
-                "multi_level_fill.txt",
-                "fifo_inside_same_price.txt",
-                "large_aggressive_order.txt"
+                "default.txt"
             ],
             "default": "default.txt"
         },
         {
-            "id": "marketDataTests",
+            "id": "dataStreamTests",
             "type": "pickString",
             "description": "Which input file do you want to use?",
             "options": [
@@ -175,21 +287,38 @@
             "default": "default.txt"
         },
         {
-            "id": "positionTrackerTests",
+            "id": "strategyEngineTests",
             "type": "pickString",
             "description": "Which input file do you want to use?",
             "options": [
-                "default.txt",
-                "long_position.txt",
-                "averaging_into_long.txt",
-                "partial_close_long.txt",
-                "full_close.txt",
-                "flip_long_to_short.txt",
-                "short_position.txt",
-                "cover_short.txt",
-                "flip_short_to_long.txt",
-                "no_position.txt",
-                "mixed_trades.txt"
+                "default.txt"
+            ],
+            "default": "default.txt"
+        },
+        {
+            "id": "riskManagerTests",
+            "type": "pickString",
+            "description": "Which input file do you want to use?",
+            "options": [
+                "default.txt"
+            ],
+            "default": "default.txt"
+        },
+        {
+            "id": "rateLimiterTests",
+            "type": "pickString",
+            "description": "Which input file do you want to use?",
+            "options": [
+                "default.txt"
+            ],
+            "default": "default.txt"
+        },
+        {
+            "id": "orderGatewayTests",
+            "type": "pickString",
+            "description": "Which input file do you want to use?",
+            "options": [
+                "default.txt"
             ],
             "default": "default.txt"
         },
@@ -213,7 +342,26 @@
             "default": "default.txt"
         },
         {
-            "id": "riskOffsetTests",
+            "id": "positionTrackerTests",
+            "type": "pickString",
+            "description": "Which input file do you want to use?",
+            "options": [
+                "default.txt",
+                "long_position.txt",
+                "averaging_into_long.txt",
+                "partial_close_long.txt",
+                "full_close.txt",
+                "flip_long_to_short.txt",
+                "short_position.txt",
+                "cover_short.txt",
+                "flip_short_to_long.txt",
+                "no_position.txt",
+                "mixed_trades.txt"
+            ],
+            "default": "default.txt"
+        },
+        {
+            "id": "offsetHedgerTests",
             "type": "pickString",
             "description": "Which input file do you want to use?",
             "options": [
@@ -227,6 +375,42 @@
                 "multi_level_hedge.txt",
                 "mixed_trades.txt",
                 "cancelling_hedges.txt"
+            ],
+            "default": "default.txt"
+        },
+        {
+            "id": "tradeLoggerTests",
+            "type": "pickString",
+            "description": "Which input file do you want to use?",
+            "options": [
+                "default.txt"
+            ],
+            "default": "default.txt"
+        },
+        {
+            "id": "latencyMonitorTests",
+            "type": "pickString",
+            "description": "Which input file do you want to use?",
+            "options": [
+                "default.txt"
+            ],
+            "default": "default.txt"
+        },
+        {
+            "id": "matchingEngineTests",
+            "type": "pickString",
+            "description": "Which input file do you want to use?",
+            "options": [
+                "default.txt",
+                "simple_match.txt",
+                "exact_match.txt",
+                "partial_fill.txt",
+                "price_priority.txt",
+                "no_match.txt",
+                "cancel_order.txt",
+                "multi_level_fill.txt",
+                "fifo_inside_same_price.txt",
+                "large_aggressive_order.txt"
             ],
             "default": "default.txt"
         }
