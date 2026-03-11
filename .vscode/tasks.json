@@ -2,6 +2,27 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "Compile MarketFeedHandler",
+            "type": "shell",
+            "command": "g++ MarketFeedHandler/FeedHandler.cpp -o MarketFeedHandler/handler.exe"
+        },
+        {
+            "label": "Run MarketFeedHandler with inputs",
+            "type": "shell",
+            "command": "handler.exe < test_cases/${input:feedHandlerTests}",
+            "options": {
+                "cwd": "${workspaceFolder}\\MarketFeedHandler",
+                "shell": {
+                    "executable": "cmd.exe",
+                    "args": ["/c"]
+                }
+            },
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            }
+        },
+        {
             "label": "Compile MatchingEngine",
             "type": "shell",
             "command": "g++ MatchingEngine/MatchingEngine.cpp -o MatchingEngine/engine.exe"
@@ -65,27 +86,6 @@
             }
         },
         {
-            "label": "Compile MarketFeedHandler",
-            "type": "shell",
-            "command": "g++ MarketFeedHandler/FeedHandler.cpp -o MarketFeedHandler/handler.exe"
-        },
-        {
-            "label": "Run MarketFeedHandler with inputs",
-            "type": "shell",
-            "command": "handler.exe < test_cases/${input:feedHandlerTests}",
-            "options": {
-                "cwd": "${workspaceFolder}\\MarketFeedHandler",
-                "shell": {
-                    "executable": "cmd.exe",
-                    "args": ["/c"]
-                }
-            },
-            "group": {
-                "kind": "test",
-                "isDefault": true
-            }
-        },
-        {
             "label": "Compile OrderLifeCycleTracker",
             "type": "shell",
             "command": "g++ OrderTracker/OrderTracker.cpp -o OrderTracker/tracker.exe"
@@ -129,6 +129,15 @@
         },
     ],
     "inputs": [
+        {
+            "id": "feedHandlerTests",
+            "type": "pickString",
+            "description": "Which input file do you want to use?",
+            "options": [
+                "default.txt"
+            ],
+            "default": "default.txt"
+        },
         {
             "id": "matchingEngineTests",
             "type": "pickString",
@@ -181,24 +190,6 @@
                 "flip_short_to_long.txt",
                 "no_position.txt",
                 "mixed_trades.txt"
-            ],
-            "default": "default.txt"
-        },
-        {
-            "id": "feedHandlerTests",
-            "type": "pickString",
-            "description": "Which input file do you want to use?",
-            "options": [
-                "default.txt",
-                "single_trade.txt",
-                "single_quote.txt",
-                "multi_trade_same_symbol.txt",
-                "trade_quote_same_symbol.txt",
-                "multi_symbols.txt",
-                "out_of_order.txt",
-                "edge_values.txt",
-                "high_precision_values.txt",
-                "large_volume_trade.txt"
             ],
             "default": "default.txt"
         },

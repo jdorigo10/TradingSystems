@@ -74,13 +74,13 @@ Processes incoming data and executes trading orders
 
 ### Market Feed Handler
 Parses raw feed messages, converts them into internal normalized structures
-- **Input**: Raw exchange messages (trade, quote, book update)
-- **Output**: MarketEvent objects forwarded to internal systems  
+- **Input**: Raw exchange messages (trades, book updates)
+- **Output**: TradeEvent and OrderUpdate objects forwarded to internal systems  
     └─ Published to Event Bus
 
 ### Order Book Builder - _TODO_
 Maintains the current bid/ask order book for each symbol, reconstructs exchange book from incremental updates
-- **Input**: Market data updates
+- **Input**: OrderUpdates from MarketFeedHandler
 - **Output**: Updated order book snapshots
 
 ### Market Data Stream
