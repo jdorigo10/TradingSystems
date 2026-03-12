@@ -1,11 +1,8 @@
-#include "FeedHandler.hpp"
+#include "common/Helpers.hpp"
 
-namespace {
-// Helper for getting current time (ns)
-auto currentTime() -> std::chrono::nanoseconds {
-  return std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now().time_since_epoch());
-}
-} // namespace
+#include "mfh/FeedHandler.hpp"
+
+namespace mfh {
 
 // Handle a TRADE message
 auto FeedHandler::processTrade(const std::string &symbol, double price, int qty, std::chrono::nanoseconds exchangeTs)
@@ -17,7 +14,7 @@ auto FeedHandler::processTrade(const std::string &symbol, double price, int qty,
   trade.qty = qty;
 
   trade.exchangeTimestamp = exchangeTs;
-  trade.receiveTimestamp = currentTime();
+  trade.receiveTimestamp = common::currentTime();
 
   // Print out new TradeEvent
   trade.print();
@@ -39,7 +36,7 @@ auto FeedHandler::proccessOrder(const std::string &id, const std::string &symbol
   order.qty = qty;
 
   order.exchangeTimestamp = exchangeTs;
-  order.receiveTimestamp = currentTime();
+  order.receiveTimestamp = common::currentTime();
 
   // Print out OrderUpdate
   order.print();
@@ -60,7 +57,7 @@ auto FeedHandler::proccessOrder(const std::string &id, const std::string &symbol
   order.qty = qty;
 
   order.exchangeTimestamp = exchangeTs;
-  order.receiveTimestamp = currentTime();
+  order.receiveTimestamp = common::currentTime();
 
   // Print out OrderUpdate
   order.print();
@@ -78,7 +75,7 @@ auto FeedHandler::proccessOrder(const std::string &id, const std::string &symbol
   order.type = common::OrderUpdate::Type::REMOVE;
 
   order.exchangeTimestamp = exchangeTs;
-  order.receiveTimestamp = currentTime();
+  order.receiveTimestamp = common::currentTime();
 
   // Print out OrderUpdate
   order.print();
@@ -100,3 +97,5 @@ auto FeedHandler::publish(const common::OrderUpdate &order) -> void {
     subscriber(order);
   }
 }
+
+} // namespace mfh

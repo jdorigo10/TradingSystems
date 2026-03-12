@@ -1,1 +1,59 @@
-int main() { return 0; }
+#include <iostream>
+#include <sstream>
+
+#include "common/Helpers.hpp"
+
+#include "mfh/FeedHandler.hpp"
+
+int main() {
+  mfh::FeedHandler handler;
+
+  // Read commands from stdin until EOF.
+  std::string line;
+  while (getline(std::cin, line)) {
+    if (line.empty()) {
+      continue;
+    }
+    std::stringstream ss(line);
+
+    std::string type;
+    ss >> type;
+
+    if (type == "TRADE") {
+      std::string symbol;
+      double price;
+      int qty;
+      ss >> symbol >> price >> qty;
+
+      handler.processTrade(symbol, price, qty, common::currentTime());
+    } else if (type == "ADD") {
+      std::string id;
+      std::string symbol;
+      std::string side;
+      double price;
+      int qty;
+      ss >> id >> symbol >> side >> price >> qty;
+
+      handler.proccessOrder(id, symbol, side, price, qty, common::currentTime());
+    } else if (type == "MODIFY") {
+      std::string id;
+      std::string symbol;
+      double price;
+      int qty;
+      ss >> id >> symbol >> price >> qty;
+
+      handler.proccessOrder(id, symbol, price, qty, common::currentTime());
+    } else if (type == "REMOVE") {
+      std::string id;
+      std::string symbol;
+      ss >> id >> symbol;
+
+      handler.proccessOrder(id, symbol, common::currentTime());
+    } else {
+      std::cout << "UNKNOWN TYPE" << std::endl;
+    }
+  }
+
+  std::cout << "\n";
+  return 0;
+}

@@ -1,18 +1,12 @@
-#include <chrono>
 #include <iostream>
 #include <sstream>
-#include <string>
 
-#include "FeedHandler.hpp"
+#include "common/Helpers.hpp"
 
-namespace {
-auto currentTime() -> std::chrono::nanoseconds {
-  return std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now().time_since_epoch());
-}
-} // namespace
+#include "mfh/FeedHandler.hpp"
 
 int main() {
-  FeedHandler handler;
+  mfh::FeedHandler handler;
 
   // Read commands from stdin until EOF.
   std::string line;
@@ -31,7 +25,7 @@ int main() {
       int qty;
       ss >> symbol >> price >> qty;
 
-      handler.processTrade(symbol, price, qty, currentTime());
+      handler.processTrade(symbol, price, qty, common::currentTime());
     } else if (type == "ADD") {
       std::string id;
       std::string symbol;
@@ -40,7 +34,7 @@ int main() {
       int qty;
       ss >> id >> symbol >> side >> price >> qty;
 
-      handler.proccessOrder(id, symbol, side, price, qty, currentTime());
+      handler.proccessOrder(id, symbol, side, price, qty, common::currentTime());
     } else if (type == "MODIFY") {
       std::string id;
       std::string symbol;
@@ -48,13 +42,13 @@ int main() {
       int qty;
       ss >> id >> symbol >> price >> qty;
 
-      handler.proccessOrder(id, symbol, price, qty, currentTime());
+      handler.proccessOrder(id, symbol, price, qty, common::currentTime());
     } else if (type == "REMOVE") {
       std::string id;
       std::string symbol;
       ss >> id >> symbol;
 
-      handler.proccessOrder(id, symbol, currentTime());
+      handler.proccessOrder(id, symbol, common::currentTime());
     } else {
       std::cout << "UNKNOWN TYPE" << std::endl;
     }
