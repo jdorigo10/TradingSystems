@@ -3,10 +3,10 @@
 
 #include "common/Helpers.hpp"
 
-#include "mfh/FeedHandler.hpp"
+#include "mp/FeedHandler.hpp"
 
 int main() {
-  mfh::FeedHandler handler;
+  mp::FeedHandler handler;
 
   // Read commands from stdin until EOF.
   std::string line;
@@ -14,6 +14,7 @@ int main() {
     if (line.empty()) {
       continue;
     }
+    std::cout << "+------------- Incoming Data -------------+\n    " << line << "\n\n";
     std::stringstream ss(line);
 
     std::string type;
@@ -54,6 +55,5 @@ int main() {
     }
   }
 
-  std::cout << "\n";
   return 0;
 }

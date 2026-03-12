@@ -1,8 +1,8 @@
 #include "common/Helpers.hpp"
 
-#include "mfh/FeedHandler.hpp"
+#include "mp/FeedHandler.hpp"
 
-namespace mfh {
+namespace mp {
 
 // Handle a TRADE message
 auto FeedHandler::processTrade(const std::string &symbol, double price, int qty, std::chrono::nanoseconds exchangeTs)
@@ -98,4 +98,4 @@ auto FeedHandler::publish(const common::OrderUpdate &order) -> void {
   }
 }
 
-} // namespace mfh
+} // namespace mp

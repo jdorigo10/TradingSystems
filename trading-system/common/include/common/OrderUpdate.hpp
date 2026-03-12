@@ -32,7 +32,7 @@ struct OrderUpdate {
     } else if (type == Type::REMOVE) {
       std::cout << "REMOVE: " << id << " " << symbol;
     }
-    std::cout << std::endl;
+    std::cout << "\n" << std::endl;
   }
 };
 

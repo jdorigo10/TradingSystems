@@ -13,5 +13,5 @@ Matching Engine
 Trade Executions
 ```
 
-## [Matching Engine](./MatchingEngine/README.md) - _UPDATE_
+## [Matching Engine](./MatchingEngine/README.md)
 Matches orders based on price-time priority, executes trades when bid >= ask

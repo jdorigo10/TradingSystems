@@ -102,4 +102,4 @@ Run alongside the pipeline, not inside it, subscribes to events emitted by core 
 ## [Standalone Components](./standalone-component/README.md)
 For real trading systems, exchanges (NASDAQ, NYSE, etc) perform order matching. The Matching Engine implementation in this repository is provided as a standalone simulation to demonstrate how price-time priority matching works internally.
 
-### [Matching Engine](./standalone-component/MatchingEngine/README.md) - _UPDATE_
+### [Matching Engine](./standalone-component/MatchingEngine/README.md)

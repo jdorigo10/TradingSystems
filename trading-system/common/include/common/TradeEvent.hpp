@@ -19,7 +19,7 @@ struct TradeEvent {
     // Allow 2 decimals
     std::cout << std::fixed << std::setprecision(2);
     std::cout << "TRADE: " << symbol << " price=" << price << " qty=" << qty;
-    std::cout << std::endl;
+    std::cout << "\n" << std::endl;
   }
 };
 

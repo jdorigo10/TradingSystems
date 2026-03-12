@@ -6,7 +6,7 @@
 #include "common/OrderUpdate.hpp"
 #include "common/TradeEvent.hpp"
 
-namespace mfh {
+namespace mp {
 
 /* Market Data Feed Handler
  * - recieves raw market messages (TradeEvents, OrderUpdates)
@@ -47,4 +47,4 @@ private:
   std::vector<OrderCallback> mOrderSubscribers;
 };
 
-} // namespace mfh
+} // namespace mp
