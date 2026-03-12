@@ -76,7 +76,7 @@ Processes incoming data and executes trading orders
 
 ### [Order Book Builder](./trading-system/main-pipeline/OrderBookBuilder/README.md) - _TODO_
 
-### [Market Data Stream](./trading-system/main-pipeline/MarketDataStream/README.md)
+### [Market Data Stream](./trading-system/main-pipeline/MarketDataStream/README.md) - _UPDATE_
 
 ### [Strategy Engine](./trading-system/main-pipeline/StrategyEngine/README.md) - _TODO_
 
@@ -89,11 +89,11 @@ Processes incoming data and executes trading orders
 ## [Trading System -> Side Systems](./trading-system/side-systems/README.md)
 Run alongside the pipeline, not inside it, subscribes to events emitted by core components to the Event Bus
 
-### [Order Tracker](./trading-system/side-systems/OrderTracker/README.md)
+### [Order Tracker](./trading-system/side-systems/OrderTracker/README.md) - _UPDATE_
 
-### [Position & PnL Tracker](./trading-system/side-systems/PositionPnLTracker/README.md)
+### [Position & PnL Tracker](./trading-system/side-systems/PositionPnLTracker/README.md) - _UPDATE_
 
-### [Offset Hedger](./trading-system/side-systems/OffsetHedger/README.md)
+### [Offset Hedger](./trading-system/side-systems/OffsetHedger/README.md) - _UPDATE_
 
 ### [Trade Logger](./trading-system/side-systems/TradeLogger/README.md) - _TODO_
 
@@ -102,4 +102,4 @@ Run alongside the pipeline, not inside it, subscribes to events emitted by core 
 ## [Standalone Components](./standalone-component/README.md)
 For real trading systems, exchanges (NASDAQ, NYSE, etc) perform order matching. The Matching Engine implementation in this repository is provided as a standalone simulation to demonstrate how price-time priority matching works internally.
 
-### [Matching Engine](./standalone-component/MatchingEngine/README.md)
+### [Matching Engine](./standalone-component/MatchingEngine/README.md) - _UPDATE_

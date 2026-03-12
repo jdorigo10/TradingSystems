@@ -17,13 +17,13 @@ Event Bus
     └────────► Latency Monitor
 ```
 
-## [Order Tracker](./OrderTracker/README.md)
+## [Order Tracker](./OrderTracker/README.md) - _UPDATE_
 Maintains lifecycle state of each order
 
-## [Position & PnL Tracker](./PositionPnLTracker/README.md)
+## [Position & PnL Tracker](./PositionPnLTracker/README.md) - _UPDATE_
 Maintains position per symbol, calculates realized and unrealized PnL
 
-## [Offset Hedger](./OffsetHedger/README.md)
+## [Offset Hedger](./OffsetHedger/README.md) - _UPDATE_
 Generates hedge trades to offset risk exposure
 
 ## [Trade Logger](./TradeLogger/README.md) - _TODO_

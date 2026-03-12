@@ -41,7 +41,7 @@ Parses raw feed messages, converts them into internal normalized structures
 ## [Order Book Builder](./OrderBookBuilder/README.md) - _TODO_
 Maintains the current bid/ask order book for each symbol, reconstructs exchange book from incremental updates
 
-## [Market Data Stream](./MarketDataStream/README.md)
+## [Market Data Stream](./MarketDataStream/README.md) - _UPDATE_
 Aggregates market statistics such as: VWAP, Last Traded Price, Volume, Rolling Averages
 
 ## [Strategy Engine](./StrategyEngine/README.md) - _TODO_
