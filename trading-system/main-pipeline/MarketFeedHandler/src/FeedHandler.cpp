@@ -4,7 +4,6 @@
 
 namespace mp {
 
-// Handle a TRADE message
 auto FeedHandler::processTrade(const std::string &symbol, double price, int qty, std::chrono::nanoseconds exchangeTs)
     -> void {
   common::TradeEvent trade;
@@ -23,7 +22,6 @@ auto FeedHandler::processTrade(const std::string &symbol, double price, int qty,
   publish(trade);
 }
 
-// Handles an ADD order message
 auto FeedHandler::proccessOrder(const std::string &id, const std::string &symbol, const std::string &side, double price,
                                 int qty, std::chrono::nanoseconds exchangeTs) -> void {
   common::OrderUpdate order;
@@ -45,7 +43,6 @@ auto FeedHandler::proccessOrder(const std::string &id, const std::string &symbol
   publish(order);
 }
 
-// Handles an MODIFY order message
 auto FeedHandler::proccessOrder(const std::string &id, const std::string &symbol, double price, int qty,
                                 std::chrono::nanoseconds exchangeTs) -> void {
   common::OrderUpdate order;
@@ -66,7 +63,6 @@ auto FeedHandler::proccessOrder(const std::string &id, const std::string &symbol
   publish(order);
 }
 
-// Handles an REMOVE order message
 auto FeedHandler::proccessOrder(const std::string &id, const std::string &symbol, std::chrono::nanoseconds exchangeTs)
     -> void {
   common::OrderUpdate order;
@@ -84,14 +80,16 @@ auto FeedHandler::proccessOrder(const std::string &id, const std::string &symbol
   publish(order);
 }
 
-// Notify all subcribers of the new TradeEvent
+auto FeedHandler::subscribe(FeedHandler::TradeCallback callback) -> void { mTradeSubscribers.push_back(callback); }
+
+auto FeedHandler::subscribe(FeedHandler::OrderCallback callback) -> void { mOrderSubscribers.push_back(callback); }
+
 auto FeedHandler::publish(const common::TradeEvent &trade) -> void {
   for (auto &subscriber : mTradeSubscribers) {
     subscriber(trade);
   }
 }
 
-// Notify all subcribers of the new OrderUpdate
 auto FeedHandler::publish(const common::OrderUpdate &order) -> void {
   for (auto &subscriber : mOrderSubscribers) {
     subscriber(order);

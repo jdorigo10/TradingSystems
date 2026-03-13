@@ -6,6 +6,9 @@
 #include "common/OrderUpdate.hpp"
 #include "common/TradeEvent.hpp"
 
+#ifndef MP_FEED_HANDLER_HPP
+#define MP_FEED_HANDLER_HPP
+
 namespace mp {
 
 /* Market Data Feed Handler
@@ -33,6 +36,12 @@ public:
   // Handles an REMOVE order message
   auto proccessOrder(const std::string &id, const std::string &symbol, std::chrono::nanoseconds exchangeTs) -> void;
 
+  // Subscribes to Trade Events
+  auto subscribe(TradeCallback callback) -> void;
+
+  // Subscribes to Order Updates
+  auto subscribe(OrderCallback callback) -> void;
+
 private:
   // Notify all subcribers of the new TradeEvent
   auto publish(const common::TradeEvent &trade) -> void;
@@ -48,3 +57,5 @@ private:
 };
 
 } // namespace mp
+
+#endif

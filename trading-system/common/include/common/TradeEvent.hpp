@@ -3,6 +3,9 @@
 #include <iostream>
 #include <string>
 
+#ifndef COMMON_TRADEEVENT_HPP
+#define COMMON_TRADEEVENT_HPP
+
 namespace common {
 
 // Represents a normalized TradeEvent
@@ -24,3 +27,5 @@ struct TradeEvent {
 };
 
 } // namespace common
+
+#endif

@@ -38,7 +38,7 @@ Exchange                          ──┘
 ## [Market Feed Handler](./MarketFeedHandler/README.md)
 Parses raw feed messages, converts them into internal normalized structures
 
-## [Order Book Builder](./OrderBookBuilder/README.md) - _TODO_
+## [Order Book Builder](./OrderBookBuilder/README.md)
 Maintains the current bid/ask order book for each symbol, reconstructs exchange book from incremental updates
 
 ## [Market Data Stream](./MarketDataStream/README.md) - _UPDATE_

@@ -2,6 +2,9 @@
 #include <map>
 #include <unordered_map>
 
+#ifndef MATCHIN_ENGINE_HPP
+#define MATCHING_ENGINE_HPP
+
 /* Represents a single Order
  *
  * Why a struct?
@@ -62,3 +65,5 @@ private:
    */
   std::map<int, std::list<Order>> mSellBook;
 };
+
+#endif

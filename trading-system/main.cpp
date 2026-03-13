@@ -3,10 +3,15 @@
 
 #include "common/Helpers.hpp"
 
+#include "mp/BookManager.hpp"
 #include "mp/FeedHandler.hpp"
 
 int main() {
   mp::FeedHandler handler;
+  mp::OrderBookManager bookManager;
+
+  // Order Books subscribe to OrderUpdates from MarketFeedHandler
+  handler.subscribe([&](const common::OrderUpdate &update) { bookManager.onOrderUpdate(update); });
 
   // Read commands from stdin until EOF.
   std::string line;
@@ -14,7 +19,7 @@ int main() {
     if (line.empty()) {
       continue;
     }
-    std::cout << "+------------- Incoming Data -------------+\n    " << line << "\n\n";
+    std::cout << "-----> Incoming Data: " << line << "\n\n";
     std::stringstream ss(line);
 
     std::string type;

@@ -1,5 +1,6 @@
 add_library(order_book_builder
-    src/BookBuilder.cpp
+    src/OrderBook.cpp
+    src/BookManager.cpp
 )
 
 target_include_directories(order_book_builder

@@ -1,5 +1,8 @@
 #include <chrono>
 
+#ifndef COMMON_HELPERS_HPP
+#define COMMON_HELPERS_HPP
+
 namespace common {
 
 // Helper for getting current time (ns)
@@ -8,3 +11,5 @@ inline auto currentTime() -> std::chrono::nanoseconds {
 }
 
 } // namespace common
+
+#endif

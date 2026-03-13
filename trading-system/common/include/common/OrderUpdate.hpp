@@ -3,6 +3,9 @@
 #include <iostream>
 #include <string>
 
+#ifndef COMMON_ORDERUPDATE_HPP
+#define COMMON_ORDERUPDATE_HPP
+
 namespace common {
 
 // Represents a normalized OrderUpdate
@@ -37,3 +40,5 @@ struct OrderUpdate {
 };
 
 } // namespace common
+
+#endif
