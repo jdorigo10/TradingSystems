@@ -1,5 +1,5 @@
 add_library(market_data_stream
-    src/DataStream.cpp
+    src/DataManager.cpp
 )
 
 target_include_directories(market_data_stream

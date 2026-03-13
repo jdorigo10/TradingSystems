@@ -18,24 +18,40 @@ auto OrderBook::onOrderUpdate(const common::OrderUpdate &update) -> void {
   }
 }
 
-auto OrderBook::bookSnapshot(const std::string &symbol) const -> void {
-  std::cout << symbol << " BOOK\n";
-
-  std::cout << "  Best Ask: ";
-  if (auto askIt = mAsks.begin(); askIt != mAsks.end()) {
-    if (!askIt->second.empty()) {
-      auto order = askIt->second.front();
-      std::cout << "$" << askIt->first << " - id=" << order->id << " qty=" << order->qty;
-    }
-  }
-  std::cout << "\n";
-
-  std::cout << "  Best Bid: ";
+auto OrderBook::getBestBid() const -> std::optional<common::Order> {
   if (auto bidIt = mBids.begin(); bidIt != mBids.end()) {
     if (!bidIt->second.empty()) {
       auto order = bidIt->second.front();
-      std::cout << "$" << bidIt->first << " - id=" << order->id << " qty=" << order->qty;
+      return *order;
     }
+  }
+
+  return std::nullopt;
+}
+
+auto OrderBook::getBestAsk() const -> std::optional<common::Order> {
+  if (auto askIt = mAsks.begin(); askIt != mAsks.end()) {
+    if (!askIt->second.empty()) {
+      auto order = askIt->second.front();
+      return *order;
+    }
+  }
+
+  return std::nullopt;
+}
+
+auto OrderBook::snapshot() const -> void {
+  std::cout << "  Best Bid: ";
+  auto bestBid = getBestBid();
+  if (bestBid.has_value()) {
+    bestBid->print();
+  }
+  std::cout << "\n";
+
+  std::cout << "  Best Ask: ";
+  auto bestAsk = getBestAsk();
+  if (bestAsk.has_value()) {
+    bestAsk->print();
   }
   std::cout << "\n";
 

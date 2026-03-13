@@ -13,12 +13,29 @@ auto OrderBookManager::onOrderUpdate(const common::OrderUpdate &update) -> void 
 
   it->second->onOrderUpdate(update);
 
-  snapshot();
+  snapshot(update.symbol);
 }
 
-auto OrderBookManager::snapshot() -> void {
-  for (const auto &book : mBooks) {
-    book.second->bookSnapshot(book.first);
+auto OrderBookManager::getBestBid(const std::string &symbol) const -> std::optional<common::Order> {
+  if (auto it = mBooks.find(symbol); it != mBooks.end()) {
+    return it->second->getBestBid();
+  }
+
+  return std::nullopt;
+}
+
+auto OrderBookManager::getBestAsk(const std::string &symbol) const -> std::optional<common::Order> {
+  if (auto it = mBooks.find(symbol); it != mBooks.end()) {
+    return it->second->getBestAsk();
+  }
+
+  return std::nullopt;
+}
+
+auto OrderBookManager::snapshot(const std::string &symbol) -> void {
+  if (auto it = mBooks.find(symbol); it != mBooks.end()) {
+    std::cout << it->first << " Book\n";
+    return it->second->snapshot();
   }
 }
 

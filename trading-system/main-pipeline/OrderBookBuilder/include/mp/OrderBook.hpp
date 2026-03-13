@@ -1,5 +1,6 @@
 #include <list>
 #include <map>
+#include <optional>
 #include <string>
 #include <unordered_map>
 
@@ -20,8 +21,14 @@ public:
   // Handles an incoming OrderUpdate (from the MarketFeedHandler)
   auto onOrderUpdate(const common::OrderUpdate &update) -> void;
 
-  // Prints out a snapshot of the Best Bid and Ask
-  auto bookSnapshot(const std::string &symbol) const -> void;
+  // Returns the current Best Bid for the book (if one)
+  auto getBestBid() const -> std::optional<common::Order>;
+
+  // Returns the current Best Ask for the book (if one)
+  auto getBestAsk() const -> std::optional<common::Order>;
+
+  // Gives a snapshot fo the best bid and ask
+  auto snapshot() const -> void;
 
 private:
   // Handles an ADD Order Update

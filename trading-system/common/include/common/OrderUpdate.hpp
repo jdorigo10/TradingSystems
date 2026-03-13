@@ -28,10 +28,10 @@ struct OrderUpdate {
     // Allow 2 decimals
     std::cout << std::fixed << std::setprecision(2);
     if (type == Type::ADD) {
-      std::cout << "ADD: " << id << " " << symbol << (side == Side::BUY ? " BUY " : " SELL ") << "price=" << price
+      std::cout << "ADD: " << id << " " << symbol << (side == Side::BUY ? " BUY " : " SELL ") << "price=$" << price
                 << " qty=" << qty;
     } else if (type == Type::MODIFY) {
-      std::cout << "MODIFY: " << id << " " << symbol << " price=" << price << " qty=" << qty;
+      std::cout << "MODIFY: " << id << " " << symbol << " price=$" << price << " qty=" << qty;
     } else if (type == Type::REMOVE) {
       std::cout << "REMOVE: " << id << " " << symbol;
     }

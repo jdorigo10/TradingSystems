@@ -4,14 +4,27 @@
 #include "common/Helpers.hpp"
 
 #include "mp/BookManager.hpp"
+#include "mp/DataManager.hpp"
 #include "mp/FeedHandler.hpp"
 
 int main() {
   mp::FeedHandler handler;
   mp::OrderBookManager bookManager;
+  mp::MarketDataManager dataManager;
 
   // Order Books subscribe to OrderUpdates from MarketFeedHandler
-  handler.subscribe([&](const common::OrderUpdate &update) { bookManager.onOrderUpdate(update); });
+  handler.subscribe([&](const common::OrderUpdate &update) {
+    bookManager.onOrderUpdate(update);
+
+    auto bestBid = bookManager.getBestBid(update.symbol);
+    auto bestAsk = bookManager.getBestAsk(update.symbol);
+    if (bestBid.has_value() && bestAsk.has_value()) {
+      dataManager.onOrderBookUpdate(update.symbol, bestBid->price, bestAsk->price);
+    }
+  });
+
+  // Market Data subscribes to TradeEvents from MarketFeedHandler
+  handler.subscribe([&](const common::TradeEvent &event) { dataManager.onTradeEvent(event); });
 
   // Read commands from stdin until EOF.
   std::string line;

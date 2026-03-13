@@ -76,7 +76,7 @@ Processes incoming data and executes trading orders
 
 ### [Order Book Builder](./trading-system/main-pipeline/OrderBookBuilder/README.md)
 
-### [Market Data Stream](./trading-system/main-pipeline/MarketDataStream/README.md) - _UPDATE_
+### [Market Data Stream](./trading-system/main-pipeline/MarketDataStream/README.md)
 
 ### [Strategy Engine](./trading-system/main-pipeline/StrategyEngine/README.md) - _TODO_
 
