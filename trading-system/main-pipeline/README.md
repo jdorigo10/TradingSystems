@@ -24,13 +24,13 @@ Strategy Engine                   ──┤
 Risk Manager                        │
    │                                │
    ▼                                │
-Rate Limiter                        |
+Rate Limiter                        │
    │                                ├── Order Execution
    ▼                                │
 Order Gateway                       │
    │                                │
    ├────► Event Bus                 │
-   |                                │
+   │                                │
    ▼                                │
 Exchange                          ──┘
 ```
@@ -44,7 +44,7 @@ Maintains the current bid/ask order book for each symbol, reconstructs exchange 
 ## [Market Data Stream](./MarketDataStream/README.md)
 Aggregates market statistics such as: VWAP, Last Traded Price, Volume, Rolling Averages
 
-## [Strategy Engine](./StrategyEngine/README.md) - _TODO_
+## [Strategy Engine](./StrategyEngine/README.md)
 Generates trading signals based on market conditions
 
 ## [Risk Manager](./RiskManager/README.md) - _TODO_

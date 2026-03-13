@@ -7,7 +7,7 @@ Run alongside the pipeline, not inside it, subscribes to events emitted by core 
 Event Bus
     │
     ├────────► Order Tracker
-    |
+    │
     ├────────► Position & PnL Tracker
     │
     ├────────► Offset Hedger ─────► Order Gateway

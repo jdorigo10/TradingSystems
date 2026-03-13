@@ -15,25 +15,12 @@ struct MarketStats {
   int tradeCount = 0;          // Total number of trades
   double vwap = 0.0;           // VWAP = total price-volume / total volume
 
-  // Order book metrics
-  double bestBid = 0.0; // Best Bid order in book
-  double bestAsk = 0.0; // Best Ask order in book
-  double spread = 0.0;  // Best Ask - Best Bid
-
-  void printTradeStats(const std::string &symbol) const {
+  void print(const std::string &symbol) const {
     // Allow 2 decimals
     std::cout << std::fixed << std::setprecision(2);
     std::cout << symbol << " Trade Stats\n";
     std::cout << "  lastPrice=$" << lastTradePrice << " tradeCount=" << tradeCount << " totalVolume=" << totalVolume
               << " VWAP=$" << vwap;
-    std::cout << "\n" << std::endl;
-  }
-
-  void printOrderStats(const std::string &symbol) const {
-    // Allow 2 decimals
-    std::cout << std::fixed << std::setprecision(2);
-    std::cout << symbol << " Order Stats\n";
-    std::cout << "  ask=$" << bestAsk << " bid=$" << bestBid << " spread=$" << spread;
     std::cout << "\n" << std::endl;
   }
 };

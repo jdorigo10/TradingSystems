@@ -7,7 +7,10 @@ target_include_directories(strategy_engine
 )
 
 target_link_libraries(strategy_engine
-    PUBLIC common
+    PUBLIC
+        common
+        market_data_stream
+        order_book_builder
 )
 
 add_subdirectory(tests)

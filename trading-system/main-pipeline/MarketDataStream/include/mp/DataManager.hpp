@@ -1,3 +1,4 @@
+#include <optional>
 #include <string>
 #include <unordered_map>
 
@@ -17,11 +18,8 @@ public:
   // Handles an incoming TradeEvent from the MarketFeedHandler
   auto onTradeEvent(const common::TradeEvent &event) -> void;
 
-  // Handles an update to the OrderBook for a symbol
-  auto onOrderBookUpdate(const std::string &symbol, double bidPrice, double askPrice) -> void;
-
   // Gets the stats for the current symbol
-  auto getStats(const std::string &symbol) -> common::MarketStats;
+  auto getStats(const std::string &symbol) const -> std::optional<common::MarketStats>;
 
 private:
   // Maps Symbol -> MarketStats (VWAP, price, volume, bid/ask)

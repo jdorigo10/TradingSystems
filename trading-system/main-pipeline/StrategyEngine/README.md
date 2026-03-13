@@ -1,4 +1,4 @@
 # Strategy Engine
 Generates trading signals based on market conditions
-- **Input**: Market statistics, Order book state
+- **Input**: MarketStats from MarketDataStream, OrderBooks from OrderBookBuilder
 - **Output**: Order requests (BUY / SELL)

@@ -1,4 +1,5 @@
 #include <memory>
+#include <optional>
 #include <unordered_map>
 
 #include "common/OrderUpdate.hpp"
@@ -19,17 +20,15 @@ public:
   // Facilitates an OrderUpdate to the correct Book
   auto onOrderUpdate(const common::OrderUpdate &update) -> void;
 
-  // Gets the Best Bid for a given Symbol (if one)
-  auto getBestBid(const std::string &symbol) const -> std::optional<common::Order>;
-
-  // Gets the Best Ask for a given Symbol (if one)
-  auto getBestAsk(const std::string &symbol) const -> std::optional<common::Order>;
+  // Gets the Book for a given symbol
+  auto getBook(const std::string &symbol) -> std::optional<OrderBook>;
 
 private:
-  // Gives a snap shot for a symbols order book
+  // Gives a snapshot for a symbols order book
   auto snapshot(const std::string &symbol) -> void;
 
-  std::unordered_map<std::string, std::unique_ptr<OrderBook>> mBooks;
+  // Map of Symbol -> OrderBook
+  std::unordered_map<std::string, OrderBook> mBooks;
 };
 
 } // namespace mp

@@ -24,23 +24,16 @@ auto MarketDataManager::onTradeEvent(const common::TradeEvent &event) -> void {
 
   stats.tradeCount++;
 
-  stats.printTradeStats(event.symbol);
+  stats.print(event.symbol);
 }
 
-auto MarketDataManager::onOrderBookUpdate(const std::string &symbol, double bidPrice, double askPrice) -> void {
-  // Access/create stats for symbol
-  auto &stats = mStats[symbol];
+auto MarketDataManager::getStats(const std::string &symbol) const -> std::optional<common::MarketStats> {
+  auto it = mStats.find(symbol);
+  if (it == mStats.end()) {
+    return std::nullopt;
+  }
 
-  stats.bestBid = bidPrice;
-  stats.bestAsk = askPrice;
-  stats.spread = askPrice - bidPrice;
-
-  stats.printOrderStats(symbol);
-}
-
-auto MarketDataManager::getStats(const std::string &symbol) -> common::MarketStats {
-  // Access/create stats for symbol
-  return mStats[symbol];
+  return it->second;
 }
 
 } // namespace mp

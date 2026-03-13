@@ -6,25 +6,28 @@
 #include "mp/BookManager.hpp"
 #include "mp/DataManager.hpp"
 #include "mp/FeedHandler.hpp"
+#include "mp/StrategyEngine.hpp"
 
 int main() {
   mp::FeedHandler handler;
   mp::OrderBookManager bookManager;
   mp::MarketDataManager dataManager;
+  mp::StrategyEngine strategyEngine{dataManager, bookManager};
 
-  // Order Books subscribe to OrderUpdates from MarketFeedHandler
+  // Callback on each OrderUpdate
   handler.subscribe([&](const common::OrderUpdate &update) {
+    // Update Order Book
     bookManager.onOrderUpdate(update);
 
-    auto bestBid = bookManager.getBestBid(update.symbol);
-    auto bestAsk = bookManager.getBestAsk(update.symbol);
-    if (bestBid.has_value() && bestAsk.has_value()) {
-      dataManager.onOrderBookUpdate(update.symbol, bestBid->price, bestAsk->price);
-    }
+    // Evaluate Symbol for Order Requests
+    strategyEngine.onMarketUpdate(update.symbol);
   });
 
-  // Market Data subscribes to TradeEvents from MarketFeedHandler
-  handler.subscribe([&](const common::TradeEvent &event) { dataManager.onTradeEvent(event); });
+  // Callback on each TradeEvent
+  handler.subscribe([&](const common::TradeEvent &event) {
+    // Update Trade Stats
+    dataManager.onTradeEvent(event);
+  });
 
   // Read commands from stdin until EOF.
   std::string line;

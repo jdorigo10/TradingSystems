@@ -32,13 +32,13 @@ Strategy Engine                   ──┤
 Risk Manager                        │
    │                                │
    ▼                                │
-Rate Limiter                        |
+Rate Limiter                        │
    │                                ├── Order Execution
    ▼                                │
 Order Gateway                       │
    │                                │
    ├────► Event Bus                 │
-   |                                │
+   │                                │
    ▼                                │
 Exchange                          ──┘
 
@@ -48,7 +48,7 @@ Exchange                          ──┘
 Event Bus
     │
     ├────────► Order Tracker
-    |
+    │
     ├────────► Position & PnL Tracker
     │
     ├────────► Offset Hedger ─────► Order Gateway
@@ -78,7 +78,7 @@ Processes incoming data and executes trading orders
 
 ### [Market Data Stream](./trading-system/main-pipeline/MarketDataStream/README.md)
 
-### [Strategy Engine](./trading-system/main-pipeline/StrategyEngine/README.md) - _TODO_
+### [Strategy Engine](./trading-system/main-pipeline/StrategyEngine/README.md)
 
 ### [Risk Manager](./trading-system/main-pipeline/RiskManager/README.md) - _TODO_
 
