@@ -20,7 +20,10 @@ int main() {
     bookManager.onOrderUpdate(update);
 
     // Evaluate Symbol for Order Requests
-    strategyEngine.onMarketUpdate(update.symbol);
+    auto result = strategyEngine.onMarketUpdate(update.symbol);
+    if (result.has_value()) {
+      auto orderRequest = std::move(result).value();
+    }
   });
 
   // Callback on each TradeEvent
