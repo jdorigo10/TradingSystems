@@ -32,7 +32,7 @@ int main() {
     if (line.empty()) {
       continue;
     }
-    std::cout << "-----> Incoming Data: " << line << "\n\n";
+    std::cout << "\n-----> Incoming Data: " << line << "\n\n";
     std::stringstream ss(line);
 
     std::string type;
