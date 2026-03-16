@@ -1,0 +1,82 @@
+*********************************************
+***           Mermaid Diagram             ***
+*** https://www.mermaidonline.live/editor ***
+*********************************************
+
+flowchart TB
+
+MarketOrders[External Market Orders]
+
+subgraph Exchange
+    MatchingEngine[Matching Engine]
+end
+
+subgraph MarketDataPipeline
+    FeedHandler[FeedHandler]
+end
+
+subgraph MarketState
+    BookManager[OrderBookManager]
+    DataManager[MarketDataManager]
+end
+
+subgraph Strategy
+    StrategyEngine[StrategyEngine]
+    OffsetHedger[OffsetHedger]
+end
+
+subgraph RiskManagement
+    RiskManager[RiskManager]
+    RateLimiter[RateLimiter]
+end
+
+subgraph Execution
+    OrderGateway[OrderGateway]
+end
+
+subgraph InternalState
+    OrderTracker[OrderTracker]
+    PositionTracker[PositionTracker]
+end
+
+subgraph Monitoring
+    LatencyMonitor[LatencyMonitor]
+    TradeLogger[TradeLogger]
+end
+
+%% Market → Exchange
+MarketOrders --> MatchingEngine
+
+%% Exchange emits events
+MatchingEngine -->|OrderUpdate| FeedHandler
+MatchingEngine -->|TradeEvent| FeedHandler
+
+%% FeedHandler distributes events
+FeedHandler -->|OrderUpdate| BookManager
+FeedHandler -->|TradeEvent| DataManager
+
+FeedHandler -->|OrderUpdate| OrderTracker
+FeedHandler -->|TradeEvent| PositionTracker
+
+%% Strategy input
+BookManager --> StrategyEngine
+
+PositionTracker --> OffsetHedger
+
+%% Strategy order generation
+StrategyEngine -->|OrderRequest| RiskManager
+
+OffsetHedger-->|HedgeOrderRequest| RiskManager
+
+%% Risk
+RiskManager --> RateLimiter
+RateLimiter --> OrderGateway
+
+%% Orders sent to exchange
+OrderGateway -->|New Order| MatchingEngine
+
+%% Monitoring + logging
+FeedHandler --> LatencyMonitor
+OrderGateway --> LatencyMonitor
+
+FeedHandler --> TradeLogger

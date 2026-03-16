@@ -1,0 +1,2 @@
+add_subdirectory(TradeLogger)
+add_subdirectory(LatencyMonitor)

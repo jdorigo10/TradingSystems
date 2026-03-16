@@ -1,105 +1,61 @@
 # C++ Trading Systems
-This repository contains simplified C++ implementations of core components commonly found in electronic trading systems.
+Contains simplified C++ implementations of core components commonly found in electronic trading systems.
 
-The examples demonstrate how market data is processed, trading decisions are generated, and orders are managed and executed.  
-The system is divided into three primary components:  
-1. Market Data Processing - _Main Pipeline_
-2. Order Execution - _Main Pipeline_
-3. Event Monitoring / Risk Systems  - _Side Systems_
+![design](./design/image.png)
 
-Some components (such as the Matching Engine) are implemented as standalone simulations to demonstrate how exchanges match orders using price-time priority.
+## Exchange
 
-```
-        Main Pipeline
-------------------------------
-Exchange                          ──┐
-   │                                │
-   ▼                                │
-Market Feed Handler                 │
-   │                                │
-   ├────► Event Bus                 │
-   │                                │
-   ▼                                ├── Market Data Processing
-Order Book Builder                  │
-   │                                │
-   ▼                                │
-Market Data Stream                  │
-   │                                │
-   ▼                                │
-Strategy Engine                   ──┤
-   │                                │
-   ▼                                │
-Risk Manager                        │
-   │                                │
-   ▼                                │
-Rate Limiter                        │
-   │                                ├── Order Execution
-   ▼                                │
-Order Gateway                       │
-   │                                │
-   ├────► Event Bus                 │
-   │                                │
-   ▼                                │
-Exchange                          ──┘
+### [Matching Engine](./exchange/MatchingEngine/README.md) - _UPDATE_
+Matches orders based on price-time priority, executes trades when bid >= ask
 
+## Trading System
 
-         Side Systems
-------------------------------
-Event Bus
-    │
-    ├────────► Order Tracker
-    │
-    ├────────► Position & PnL Tracker
-    │
-    ├────────► Offset Hedger ─────► Order Gateway
-    │
-    ├────────► Trade Logger
-    │
-    └────────► Latency Monitor
+### Data Pipeline
 
+### [Market Feed Handler](./trading-system/MarketFeedHandler/README.md)
+Parses raw feed messages, converts them into internal normalized structures
 
-     Standalone Component
-------------------------------
-Orders (BUY / SELL / CANCEL)
-        │
-        ▼
-Matching Engine
-        │
-        ▼
-Trade Executions
-```
+### Market State
 
-## [Trading System -> Main Pipeline](./trading-system/main-pipeline/README.md)
-Processes incoming data and executes trading orders
+### [Order Book Manager](./trading-system/OrderBookManager/README.md)
+Maintains the current bid/ask order book for each symbol, reconstructs exchange book from incremental updates
 
-### [Market Feed Handler](./trading-system/main-pipeline/MarketFeedHandler/README.md)
+### [Market Data Manager](./trading-system/MarketDataManager/README.md)
+Aggregates market statistics such as: VWAP, Last Traded Price, Volume, Rolling Averages
 
-### [Order Book Builder](./trading-system/main-pipeline/OrderBookBuilder/README.md)
+### Internal State
 
-### [Market Data Stream](./trading-system/main-pipeline/MarketDataStream/README.md)
+### [Order Tracker](./trading-system/OrderTracker/README.md)
+Maintains lifecycle state of each order
 
-### [Strategy Engine](./trading-system/main-pipeline/StrategyEngine/README.md)
+### [Position](./trading-system/PositionTracker/README.md)
+Maintains position per symbol, calculates realized and unrealized PnL
 
-### [Risk Manager](./trading-system/main-pipeline/RiskManager/README.md) - _TODO_
+### Strategy
 
-### [Rate Limiter](./trading-system/main-pipeline/RateLimiter/README.md) - _TODO_
+### [Strategy Engine](./trading-system/StrategyEngine/README.md)
+Generates trading signals based on market conditions
 
-### [Order Gateway](./trading-system/main-pipeline/OrderGateway/README.md) - _TODO_
+### [Offset Hedger](./trading-system/OffsetHedger/README.md) - _UPDATE_
+Generates hedge trades to offset risk exposure
 
-## [Trading System -> Side Systems](./trading-system/side-systems/README.md)
-Run alongside the pipeline, not inside it, subscribes to events emitted by core components to the Event Bus
+### Risk Management
 
-### [Order Tracker](./trading-system/side-systems/OrderTracker/README.md) - _UPDATE_
+### [Risk Manager](./trading-system/RiskManager/README.md) - _TODO_
+Validates risk limits before allowing order submission, checks: Max Position, Max Order Size, Daily Loss Limits
 
-### [Position & PnL Tracker](./trading-system/side-systems/PositionPnLTracker/README.md) - _UPDATE_
+### [Rate Limiter](./trading-system/RateLimiter/README.md) - _TODO_
+Prevents sending too many orders to the exchange, ensures compliance with exchange rate limits
 
-### [Offset Hedger](./trading-system/side-systems/OffsetHedger/README.md) - _UPDATE_
+### Execution
 
-### [Trade Logger](./trading-system/side-systems/TradeLogger/README.md) - _TODO_
+### [Order Gateway](./trading-system/OrderGateway/README.md) - _TODO_
+Handles communication with exchange APIs, sends orders and receives execution reports
 
-### [Latency Monitor](./trading-system/side-systems/LatencyMonitor/README.md) - _TODO_
+### Monitoring
 
-## [Standalone Components](./standalone-component/README.md)
-For real trading systems, exchanges (NASDAQ, NYSE, etc) perform order matching. The Matching Engine implementation in this repository is provided as a standalone simulation to demonstrate how price-time priority matching works internally.
+### [Trade Logger](./monitoring/TradeLogger/README.md) - _TODO_
+Persists system events (orders, trades, and market data) for audit, replay, and debugging
 
-### [Matching Engine](./standalone-component/MatchingEngine/README.md)
+### [Latency Monitor](./monitoring/LatencyMonitor/README.md) - _TODO_
+Measures latency between key system stages such as: Market data receive → strategy decision, Strategy decision → order submission, Order submission → exchange acknowledgment
