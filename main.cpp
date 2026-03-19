@@ -18,7 +18,7 @@ int main() {
 
   // Callback on each Exchange order ouput
   exchange.setOrderCallback([&](const std::string &id, const std::string &symbol, const common::OrderAction &action,
-                                const common::OrderSide &side, double price, int qty, bool isUserOrder) {
+                                const common::OrderSide &side, double price, int qty, bool isUserOrder, bool isFilled) {
     std::cout << "\n------------------------------------------------------------------------------------------------\n";
 
     // Allow 2 decimals
@@ -27,17 +27,17 @@ int main() {
     if (action == common::OrderAction::ADD) {
       std::cout << "ADD " << id << " " << symbol << " ";
       std::cout << (side == common::OrderSide::BUY ? "BUY " : "SELL ");
-      std::cout << price << " " << qty << (isUserOrder ? " [USER]" : "");
+      std::cout << price << " " << qty << (isUserOrder ? " USER" : "");
     } else if (action == common::OrderAction::MODIFY) {
       std::cout << "MODIFY " << id << " " << symbol << " ";
       std::cout << price << " " << qty;
     } else if (action == common::OrderAction::REMOVE) {
-      std::cout << "REMOVE " << id << " " << symbol << " " << qty;
+      std::cout << "REMOVE " << id << " " << symbol << (isFilled ? " FILLED" : " CANCELLED");
     }
     std::cout << std::endl;
 
     // Normalize incoming order, and publish to rest of trading system
-    handler.proccessOrder(id, symbol, action, side, price, qty, isUserOrder);
+    handler.proccessOrder(id, symbol, action, side, price, qty, isUserOrder, isFilled);
   });
 
   // Callback on each Exchange trade ouput

@@ -5,8 +5,9 @@
 namespace trade {
 
 auto FeedHandler::proccessOrder(const std::string &id, const std::string &symbol, const common::OrderAction &action,
-                                const common::OrderSide &side, double price, int qty, bool isUserOrder) -> void {
-  common::OrderUpdate order{id, symbol, action, side, price, qty, isUserOrder};
+                                const common::OrderSide &side, double price, int qty, bool isUserOrder, bool isFilled)
+    -> void {
+  common::OrderUpdate order{id, symbol, action, side, price, qty, isUserOrder, isFilled};
 
   // Print out OrderUpdate
   order.print();

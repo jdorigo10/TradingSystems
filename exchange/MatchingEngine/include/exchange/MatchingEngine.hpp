@@ -24,7 +24,7 @@ class MatchingEngine {
 public:
   using OrderCb =
       std::function<void(const std::string &id, const std::string &symbol, const common::OrderAction &action,
-                         const common::OrderSide &side, double price, int qty, bool isUserOrder)>;
+                         const common::OrderSide &side, double price, int qty, bool isUserOrder, bool isFilled)>;
   using TradeCb = std::function<void(const std::string &symbol, double price, int qty, const std::string &sellSideId,
                                      const std::string &buySideId)>;
 
@@ -57,7 +57,7 @@ private:
   auto fireModify(const common::Order &order) -> void;
 
   // Helper to fire a REMOVE msg to the feed
-  auto fireRemove(const common::Order &order) -> void;
+  auto fireRemove(const common::Order &order, bool isFilled = false) -> void;
 
   // Helper to fire a TRADE msg to the feed
   auto fireTrade(const std::string &sellSideId, const std::string &buySideId, double price, int qty) -> void;

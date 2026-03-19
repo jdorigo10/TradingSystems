@@ -5,7 +5,7 @@ Contains simplified C++ implementations of core components commonly found in ele
 
 ## Exchange
 
-### [Matching Engine](./exchange/MatchingEngine/README.md) - _UPDATE_
+### [Matching Engine](./exchange/MatchingEngine/README.md)
 Matches orders based on price-time priority, executes trades when bid >= ask
 
 ## Trading System

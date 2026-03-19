@@ -24,6 +24,7 @@ struct OrderUpdate {
   int qty = 0;
 
   bool isUserOrder = false;
+  bool isFilled = false;
 
   void print() const {
     // Allow 2 decimals
@@ -34,7 +35,7 @@ struct OrderUpdate {
     } else if (action == OrderAction::MODIFY) {
       std::cout << " MODIFY: " << id << " " << symbol << " price=$" << price << " qty=" << qty;
     } else if (action == OrderAction::REMOVE) {
-      std::cout << " REMOVE: " << id << " " << symbol;
+      std::cout << " REMOVE: " << id << " " << symbol << (isFilled ? " [FILLED]" : " [CANCELLED]");
     }
     std::cout << "\n" << std::endl;
   }

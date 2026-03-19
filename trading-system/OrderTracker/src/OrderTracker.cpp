@@ -14,7 +14,12 @@ auto OrderTracker::onOrderUpdate(const common::OrderUpdate &update) -> void {
     break;
 
   case common::OrderAction::REMOVE:
-    removeOrder(update.id);
+    // If it is a REMOVE update resulting from a trade, treat as a modify
+    if (update.isFilled) {
+      modifyOrder(update.id, update.qty);
+    } else {
+      removeOrder(update.id);
+    }
     break;
   }
 }

@@ -7,7 +7,7 @@
 
 int main() {
   auto orderCb = [](const std::string &id, const std::string &symbol, const common::OrderAction &action,
-                    const common::OrderSide &side, double price, int qty, bool isUserOrder) {
+                    const common::OrderSide &side, double price, int qty, bool isUserOrder, bool isFilled) {
     // Allow 2 decimals
     std::cout << std::fixed << std::setprecision(2);
     if (action == common::OrderAction::ADD) {
@@ -18,7 +18,7 @@ int main() {
       std::cout << "MODIFY " << id << " " << symbol << " ";
       std::cout << price << " " << qty;
     } else if (action == common::OrderAction::REMOVE) {
-      std::cout << "REMOVE " << id << " " << symbol << " ";
+      std::cout << "REMOVE " << id << " " << symbol << (isFilled ? " [FILLED]" : "");
     }
     std::cout << std::endl;
   };

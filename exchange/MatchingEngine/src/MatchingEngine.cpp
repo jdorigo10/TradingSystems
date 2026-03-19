@@ -22,8 +22,8 @@ auto MatchingEngine::addOrder(const std::string &id, const common::OrderRequest 
 
     addToBook(std::move(order));
   } else {
-    // Send REMOVE msg to feed
-    fireRemove(order);
+    // Send REMOVE msg to feed (flagged as a modify, not cancel)
+    fireRemove(order, true);
   }
 }
 
@@ -108,8 +108,8 @@ auto MatchingEngine::matchBuyOrder(common::Order &order) -> bool {
 
     // Remove sell order if fulfilled
     if (sellOrder->qty == 0) {
-      // Send REMOVE msg to feed
-      fireRemove(*sellOrder);
+      // Send REMOVE msg to feed (flagged as a modify, not cancel)
+      fireRemove(*sellOrder, true);
 
       mOrderIndex.erase(sellOrder->id);
       sellOrders.erase(sellOrder);
@@ -157,8 +157,8 @@ auto MatchingEngine::matchSellOrder(common::Order &order) -> bool {
 
     // Remove buy order if fulfilled
     if (buyOrder->qty == 0) {
-      // Send REMOVE msg to feed
-      fireRemove(*buyOrder);
+      // Send REMOVE msg to feed (flagged as a modify, not cancel)
+      fireRemove(*buyOrder, true);
 
       mOrderIndex.erase(buyOrder->id);
       buyOrders.erase(buyOrder);
@@ -192,21 +192,21 @@ auto MatchingEngine::addToBook(common::Order order) -> void {
 
 auto MatchingEngine::fireAdd(const common::Order &order, bool isUserOrder) -> void {
   if (mOrderCb) {
-    mOrderCb(order.id, mSymbol, common::OrderAction::ADD, order.side, order.price, order.qty, isUserOrder);
+    mOrderCb(order.id, mSymbol, common::OrderAction::ADD, order.side, order.price, order.qty, isUserOrder, false);
   }
 }
 
 auto MatchingEngine::fireModify(const common::Order &order) -> void {
   if (mOrderCb) {
     // Disregards: isUser
-    mOrderCb(order.id, mSymbol, common::OrderAction::MODIFY, order.side, order.price, order.qty, false);
+    mOrderCb(order.id, mSymbol, common::OrderAction::MODIFY, order.side, order.price, order.qty, false, false);
   }
 }
 
-auto MatchingEngine::fireRemove(const common::Order &order) -> void {
+auto MatchingEngine::fireRemove(const common::Order &order, bool isFilled) -> void {
   if (mOrderCb) {
     // Disregards: side, price, qty, isUser
-    mOrderCb(order.id, mSymbol, common::OrderAction::REMOVE, order.side, order.price, order.qty, false);
+    mOrderCb(order.id, mSymbol, common::OrderAction::REMOVE, order.side, order.price, order.qty, false, isFilled);
   }
 }
 

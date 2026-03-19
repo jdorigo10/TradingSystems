@@ -24,7 +24,7 @@ public:
 
   // Handles an Order message
   auto proccessOrder(const std::string &id, const std::string &symbol, const common::OrderAction &action,
-                     const common::OrderSide &side, double price, int qty, bool isUserOrder) -> void;
+                     const common::OrderSide &side, double price, int qty, bool isUserOrder, bool isFilled) -> void;
 
   // Handle a Trade message
   auto processTrade(const std::string &symbol, double price, int qty, const std::string &sellSideId,
