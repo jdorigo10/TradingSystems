@@ -19,41 +19,35 @@ namespace trade {
 class FeedHandler {
 public:
   // Callback function for subscribers
-  using TradeCallback = std::function<void(const common::TradeEvent &)>;
   using OrderCallback = std::function<void(const common::OrderUpdate &)>;
+  using TradeCallback = std::function<void(const common::TradeEvent &)>;
 
-  // Handle a TRADE message
+  // Handles an Order message
+  auto proccessOrder(const std::string &id, const std::string &symbol, const common::OrderAction &action,
+                     const common::OrderSide &side, double price, int qty, bool isUserOrder) -> void;
+
+  // Handle a Trade message
   auto processTrade(const std::string &symbol, double price, int qty, const std::string &sellSideId,
                     const std::string &buySideId) -> void;
-
-  // Handles an ADD order message
-  auto proccessOrder(const std::string &id, const std::string &symbol, const std::string &side, double price, int qty,
-                     bool isUserOrder) -> void;
-
-  // Handles an MODIFY order message
-  auto proccessOrder(const std::string &id, const std::string &symbol, double price, int qty) -> void;
-
-  // Handles an REMOVE order message
-  auto proccessOrder(const std::string &id, const std::string &symbol) -> void;
-
-  // Subscription callback on Trade Events
-  auto subscribe(TradeCallback &&callback) -> void;
 
   // Subscription callback on Order Updates
   auto subscribe(OrderCallback &&callback) -> void;
 
-private:
-  // Notify all subcribers of the new TradeEvent
-  auto publish(const common::TradeEvent &trade) -> void;
+  // Subscription callback on Trade Events
+  auto subscribe(TradeCallback &&callback) -> void;
 
-  // Notify all subcribers of the new OrderUpdate
+private:
+  // Publish the new OrderUpdate
   auto publish(const common::OrderUpdate &order) -> void;
 
-  // Callback that will Subscribe to new TradeEvents
-  TradeCallback mTradeCallback;
+  // Publish the new TradeEvent
+  auto publish(const common::TradeEvent &trade) -> void;
 
   // Callback that will Subscribe to new OrderUpdates
   OrderCallback mOrderCallback;
+
+  // Callback that will Subscribe to new TradeEvents
+  TradeCallback mTradeCallback;
 };
 
 } // namespace trade

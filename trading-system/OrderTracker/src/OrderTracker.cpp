@@ -4,16 +4,16 @@
 namespace trade {
 
 auto OrderTracker::onOrderUpdate(const common::OrderUpdate &update) -> void {
-  switch (update.type) {
-  case common::OrderUpdateType::ADD:
+  switch (update.action) {
+  case common::OrderAction::ADD:
     addOrder(update);
     break;
 
-  case common::OrderUpdateType::MODIFY:
+  case common::OrderAction::MODIFY:
     modifyOrder(update.id, update.qty);
     break;
 
-  case common::OrderUpdateType::REMOVE:
+  case common::OrderAction::REMOVE:
     removeOrder(update.id);
     break;
   }
@@ -49,7 +49,6 @@ auto OrderTracker::addOrder(const common::OrderUpdate &update) -> void {
 
   mOrders[newOrder.id] = newOrder;
 
-  std::cout << "NEW order: ";
   newOrder.print();
 }
 
@@ -70,7 +69,6 @@ auto OrderTracker::modifyOrder(const std::string &id, int qty) -> void {
     order.status = common::LiveOrderStatus::PARTIALLY_FILLED;
   }
 
-  std::cout << "FILL order: ";
   order.print();
 }
 
@@ -88,7 +86,6 @@ auto OrderTracker::removeOrder(const std::string &id) -> void {
 
   order.status = common::LiveOrderStatus::CANCELLED;
 
-  std::cout << "CANCEL order: ";
   order.print();
 }
 

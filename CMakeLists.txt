@@ -21,7 +21,7 @@ target_link_libraries(trading_system
     common
 
     # Exchange
-    matching_engine
+    exchange
 
     # Trading System
     market_feed_handler

@@ -20,9 +20,9 @@ struct Position {
   void print(const std::string &symbol) const {
     // Allow 2 decimals
     std::cout << std::fixed << std::setprecision(2);
-    std::cout << symbol << " Position\n";
-    std::cout << "  qty=" << position << " avgPrice=$" << avgPrice << "\n";
-    std::cout << "  rPnL=" << realizedPnL << " uPnL=" << unrealizedPnL() << " tPnL=" << totalPnL();
+    std::cout << " " << symbol << " Position\n";
+    std::cout << "   qty=" << position << " avgPrice=$" << avgPrice << "\n";
+    std::cout << "   rPnL=" << realizedPnL << " uPnL=" << unrealizedPnL() << " tPnL=" << totalPnL();
     std::cout << "\n" << std::endl;
   }
 };

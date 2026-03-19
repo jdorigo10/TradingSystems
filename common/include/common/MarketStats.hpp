@@ -18,8 +18,8 @@ struct MarketStats {
   void print(const std::string &symbol) const {
     // Allow 2 decimals
     std::cout << std::fixed << std::setprecision(2);
-    std::cout << symbol << " Trade Stats\n";
-    std::cout << "  lastPrice=$" << lastTradePrice << " tradeCount=" << tradeCount << " totalVolume=" << totalVolume
+    std::cout << " " << symbol << " Trade Stats\n";
+    std::cout << "   lastPrice=$" << lastTradePrice << " tradeCount=" << tradeCount << " totalVolume=" << totalVolume
               << " VWAP=$" << vwap;
     std::cout << "\n" << std::endl;
   }

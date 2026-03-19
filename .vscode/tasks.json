@@ -22,7 +22,7 @@
             "label": "Test Matching Engine standalone",
             "detail": "exchange -> MatchingEngine",
             "type": "shell",
-            "command": "matching_engine_tests.exe < ../build_inputs/${input:matchingEngineTests}",
+            "command": "matching_engine_tests.exe",
             "options": {
                 "cwd": "${workspaceFolder}\\exchange\\MatchingEngine\\tests\\build",
                 "shell": {
@@ -39,7 +39,7 @@
             "label": "Test Market Feed Handler standalone",
             "detail": "trading-system -> MarketFeedHandler",
             "type": "shell",
-            "command": "market_feed_handler_tests.exe < ../build_inputs/${input:feedHandlerTests}",
+            "command": "market_feed_handler_tests.exe",
             "options": {
                 "cwd": "${workspaceFolder}\\trading-system\\MarketFeedHandler\\tests\\build",
                 "shell": {
@@ -87,7 +87,7 @@
             }
         },
                 {
-            "label": "Run Order Tracker standalone",
+            "label": "Test Order Tracker standalone",
             "detail": "trading-system -> OrderTracker",
             "type": "shell",
             "command": "order_tracker_tests.exe",
@@ -124,7 +124,7 @@
             "label": "Test Strategy Engine standalone",
             "detail": "trading-system -> StrategyEngine",
             "type": "shell",
-            "command": "strategy_engine_tests.exe < ../build_inputs/${input:strategyEngineTests}",
+            "command": "strategy_engine_tests.exe",
             "options": {
                 "cwd": "${workspaceFolder}\\trading-system\\StrategyEngine\\tests\\build",
                 "shell": {
@@ -223,7 +223,7 @@
             }
         },
         {
-            "label": "Run Latency Monitor standalone",
+            "label": "Test Latency Monitor standalone",
             "detail": "monitoring -> LatencyMonitor",
             "type": "shell",
             "command": "latency_monitor.exe < ../build_inputs/${input:latencyMonitorTests}",
@@ -243,42 +243,6 @@
     "inputs": [
         {
             "id": "tradingSystemTests",
-            "type": "pickString",
-            "description": "Which input file do you want to use?",
-            "options": [
-                "default.txt"
-            ],
-            "default": "default.txt"
-        },
-        {
-            "id": "matchingEngineTests",
-            "type": "pickString",
-            "description": "Which input file do you want to use?",
-            "options": [
-                "default.txt",
-                "simple_match.txt",
-                "exact_match.txt",
-                "partial_fill.txt",
-                "price_priority.txt",
-                "no_match.txt",
-                "cancel_order.txt",
-                "multi_level_fill.txt",
-                "fifo_inside_same_price.txt",
-                "large_aggressive_order.txt"
-            ],
-            "default": "default.txt"
-        },
-        {
-            "id": "feedHandlerTests",
-            "type": "pickString",
-            "description": "Which input file do you want to use?",
-            "options": [
-                "default.txt"
-            ],
-            "default": "default.txt"
-        },
-        {
-            "id": "strategyEngineTests",
             "type": "pickString",
             "description": "Which input file do you want to use?",
             "options": [

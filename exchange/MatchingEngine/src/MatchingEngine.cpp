@@ -4,103 +4,30 @@
 
 namespace exchange {
 
-auto MatchingEngine::submitBuyOrder(int id, int price, int qty) -> void {
-  // Run until fulfilled or no more matches
-  while (qty > 0 && !mSellBook.empty()) {
-    auto bestSellLevel = mSellBook.begin();
-    int bestSellPrice = bestSellLevel->first;
+auto MatchingEngine::addOrder(const std::string &id, const common::OrderRequest &request, bool isModify) -> void {
+  common::Order order{id, request.side, request.price, request.qty};
 
-    // Check if we have price match
-    if (bestSellPrice > price) {
-      break;
-    }
+  // Send ADD/MODIFY msg to feed
+  (!isModify) ? fireAdd(order, request.isUserOrder) : fireModify(order);
 
-    // Get our list of best sell orders to make trades
-    auto &sellOrders = bestSellLevel->second;
-
-    // Get our first best sell order to trade
-    auto sellOrder = sellOrders.begin();
-    int tradeQty = std::min(qty, sellOrder->quantity);
-
-    // TRADE
-    std::cout << "Trade Executed \n"
-              << " (" << id << ") BUY " << price << "\n"
-              << " (" << sellOrder->id << ") SELL " << sellOrder->price << "\n"
-              << " QTY " << tradeQty << "\n"
-              << std::endl;
-
-    // Update quantities after trade
-    qty = qty - tradeQty;
-    sellOrder->quantity = sellOrder->quantity - tradeQty;
-
-    // Remove sell order if fulfilled
-    if (sellOrder->quantity == 0) {
-      mOrderIndex.erase(sellOrder->id);
-      sellOrders.erase(sellOrder);
-
-      // Remove price level from Sell Book if emptied
-      if (sellOrders.empty()) {
-        mSellBook.erase(bestSellLevel);
-      }
-    }
-  }
+  // Match request for a Trade
+  auto traded = (order.side == common::OrderSide::BUY) ? matchBuyOrder(order) : matchSellOrder(order);
 
   // Add to order book if not fulfilled
-  if (qty > 0) {
-    addOrderToBook(id, price, qty, true);
+  if (order.qty > 0) {
+    // Send MODIFY msg to feed (if a trade occurred)
+    if (traded) {
+      fireModify(order);
+    }
+
+    addToBook(std::move(order));
+  } else {
+    // Send REMOVE msg to feed
+    fireRemove(order);
   }
 }
 
-// Submits a SELL order
-auto MatchingEngine::submitSellOrder(int id, int price, int qty) -> void {
-  // Run until fulfilled or no more matches
-  while (qty > 0 && !mBuyBook.empty()) {
-    auto bestBuyLevel = mBuyBook.begin();
-    int bestBuyPrice = bestBuyLevel->first;
-
-    // Check if we have price match
-    if (bestBuyPrice < price) {
-      break;
-    }
-
-    // Get our list of best buy orders to make trades
-    auto &buyOrders = bestBuyLevel->second;
-
-    // Get our first best buy order to trade
-    auto buyOrder = buyOrders.begin();
-    int tradeQty = std::min(qty, buyOrder->quantity);
-
-    // TRADE
-    std::cout << "Trade Executed \n"
-              << " (" << id << ") SELL " << price << "\n"
-              << " (" << buyOrder->id << ") BUY " << buyOrder->price << "\n"
-              << " QTY " << tradeQty << "\n"
-              << std::endl;
-
-    // Update quantities after trade
-    qty = qty - tradeQty;
-    buyOrder->quantity = buyOrder->quantity - tradeQty;
-
-    // Remove buy order if fulfilled
-    if (buyOrder->quantity == 0) {
-      mOrderIndex.erase(buyOrder->id);
-      buyOrders.erase(buyOrder);
-
-      // Remove price level from Buy Book if emptied
-      if (buyOrders.empty()) {
-        mBuyBook.erase(bestBuyLevel);
-      }
-    }
-  }
-
-  // Add to order book if not fulfilled
-  if (qty > 0) {
-    addOrderToBook(id, price, qty, false);
-  }
-}
-
-// CANCELs an order
-auto MatchingEngine::cancel(int id) -> void {
+auto MatchingEngine::cancelOrder(const std::string &id, bool isModify) -> void {
   // Ensure the order exists
   if (!mOrderIndex.count(id)) {
     return;
@@ -110,7 +37,12 @@ auto MatchingEngine::cancel(int id) -> void {
   auto order = mOrderIndex[id];
   auto price = order->price;
 
-  if (order->isBuy) {
+  // Send REMOVE msg to feed (ignore on modify requests)
+  if (!isModify) {
+    fireRemove(*order);
+  }
+
+  if (order->side == common::OrderSide::BUY) {
     // Get our list of buy orders at this price
     auto &buyOrders = mBuyBook[price];
 
@@ -138,26 +70,150 @@ auto MatchingEngine::cancel(int id) -> void {
   mOrderIndex.erase(id);
 }
 
-// Adds Order to the appropriate book
-auto MatchingEngine::addOrderToBook(int id, int price, int qty, bool isBuy) -> void {
-  Order order{id, price, qty, isBuy};
+auto MatchingEngine::modifyOrder(const std::string &id, const common::OrderRequest &request) -> void {
+  // Cancel the existing order (noting its a modify request)
+  cancelOrder(id, true);
 
-  if (isBuy) {
-    // Add new order to Buy Book at price level
-    auto &priceLevel = mBuyBook[price];
-    priceLevel.push_back(order);
+  // Add the new modified version of the order (noting its a modify request)
+  addOrder(id, request, true);
+}
 
-    // Get pointer to newly added order and add to order index
-    auto it = prev(priceLevel.end());
-    mOrderIndex[id] = it;
-  } else {
-    // Add new order to Sell Book at price level
-    auto &priceLevel = mSellBook[price];
-    priceLevel.push_back(order);
+auto MatchingEngine::matchBuyOrder(common::Order &order) -> bool {
+  bool traded = false;
 
-    // Get pointer to newly added order and add to order index
-    auto it = prev(priceLevel.end());
-    mOrderIndex[id] = it;
+  // Run until fulfilled or no more matches
+  while (order.qty > 0 && !mSellBook.empty()) {
+    auto bestSellLevel = mSellBook.begin();
+    double bestSellPrice = bestSellLevel->first;
+
+    // Check if we have price match
+    if (bestSellPrice > order.price) {
+      break;
+    }
+
+    // Get our list of best sell orders to make trades
+    auto &sellOrders = bestSellLevel->second;
+
+    // Get our first best sell order to trade
+    auto sellOrder = sellOrders.begin();
+    int tradeQty = std::min(order.qty, sellOrder->qty);
+
+    // Send TRADE msg to feed
+    fireTrade(sellOrder->id, order.id, bestSellPrice, tradeQty);
+    traded = true;
+
+    // Update quantities after trade
+    order.qty = order.qty - tradeQty;
+    sellOrder->qty = sellOrder->qty - tradeQty;
+
+    // Remove sell order if fulfilled
+    if (sellOrder->qty == 0) {
+      // Send REMOVE msg to feed
+      fireRemove(*sellOrder);
+
+      mOrderIndex.erase(sellOrder->id);
+      sellOrders.erase(sellOrder);
+
+      // Remove price level from Sell Book if emptied
+      if (sellOrders.empty()) {
+        mSellBook.erase(bestSellLevel);
+      }
+    } else {
+      // Send MODIFY msg to feed
+      fireModify(*sellOrder);
+    }
+  }
+
+  return traded;
+}
+
+auto MatchingEngine::matchSellOrder(common::Order &order) -> bool {
+  bool traded = false;
+
+  // Run until fulfilled or no more matches
+  while (order.qty > 0 && !mBuyBook.empty()) {
+    auto bestBuyLevel = mBuyBook.begin();
+    double bestBuyPrice = bestBuyLevel->first;
+
+    // Check if we have price match
+    if (bestBuyPrice < order.price) {
+      break;
+    }
+
+    // Get our list of best buy orders to make trades
+    auto &buyOrders = bestBuyLevel->second;
+
+    // Get our first best buy order to trade
+    auto buyOrder = buyOrders.begin();
+    int tradeQty = std::min(order.qty, buyOrder->qty);
+
+    // TRADE
+    fireTrade(buyOrder->id, order.id, bestBuyPrice, tradeQty);
+    traded = true;
+
+    // Update quantities after trade
+    order.qty = order.qty - tradeQty;
+    buyOrder->qty = buyOrder->qty - tradeQty;
+
+    // Remove buy order if fulfilled
+    if (buyOrder->qty == 0) {
+      // Send REMOVE msg to feed
+      fireRemove(*buyOrder);
+
+      mOrderIndex.erase(buyOrder->id);
+      buyOrders.erase(buyOrder);
+
+      // Remove price level from Buy Book if emptied
+      if (buyOrders.empty()) {
+        mBuyBook.erase(bestBuyLevel);
+      }
+    } else {
+      // Send MODIFY msg to feed
+      fireModify(*buyOrder);
+    }
+  }
+
+  return traded;
+}
+
+auto MatchingEngine::addToBook(common::Order order) -> void {
+  auto id = order.id;
+
+  // Get the price level from the correct book
+  auto &priceLevel = (order.side == common::OrderSide::BUY) ? mBuyBook[order.price] : mSellBook[order.price];
+
+  // Add new order to the Book at price level
+  priceLevel.push_back(std::move(order));
+
+  // Get pointer to newly added order and add to order index
+  auto it = prev(priceLevel.end());
+  mOrderIndex[id] = it;
+}
+
+auto MatchingEngine::fireAdd(const common::Order &order, bool isUserOrder) -> void {
+  if (mOrderCb) {
+    mOrderCb(order.id, mSymbol, common::OrderAction::ADD, order.side, order.price, order.qty, isUserOrder);
+  }
+}
+
+auto MatchingEngine::fireModify(const common::Order &order) -> void {
+  if (mOrderCb) {
+    // Disregards: isUser
+    mOrderCb(order.id, mSymbol, common::OrderAction::MODIFY, order.side, order.price, order.qty, false);
+  }
+}
+
+auto MatchingEngine::fireRemove(const common::Order &order) -> void {
+  if (mOrderCb) {
+    // Disregards: side, price, qty, isUser
+    mOrderCb(order.id, mSymbol, common::OrderAction::REMOVE, order.side, order.price, order.qty, false);
+  }
+}
+
+auto MatchingEngine::fireTrade(const std::string &sellSideId, const std::string &buySideId, double price, int qty)
+    -> void {
+  if (mTradeCb) {
+    mTradeCb(mSymbol, price, qty, sellSideId, buySideId);
   }
 }
 

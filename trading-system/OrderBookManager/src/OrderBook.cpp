@@ -3,16 +3,16 @@
 namespace trade {
 
 auto OrderBook::onOrderUpdate(const common::OrderUpdate &update) -> void {
-  switch (update.type) {
-  case common::OrderUpdateType::ADD:
+  switch (update.action) {
+  case common::OrderAction::ADD:
     addOrder(update);
     break;
 
-  case common::OrderUpdateType::MODIFY:
+  case common::OrderAction::MODIFY:
     modifyOrder(update);
     break;
 
-  case common::OrderUpdateType::REMOVE:
+  case common::OrderAction::REMOVE:
     removeOrder(update);
     break;
   }
@@ -41,14 +41,14 @@ auto OrderBook::getBestAsk() const -> std::optional<common::Order> {
 }
 
 auto OrderBook::snapshot() const -> void {
-  std::cout << "  Best Bid: ";
+  std::cout << "   Best Bid: ";
   auto bestBid = getBestBid();
   if (bestBid.has_value()) {
     bestBid->print();
   }
   std::cout << "\n";
 
-  std::cout << "  Best Ask: ";
+  std::cout << "   Best Ask: ";
   auto bestAsk = getBestAsk();
   if (bestAsk.has_value()) {
     bestAsk->print();

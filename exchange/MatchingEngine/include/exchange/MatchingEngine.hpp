@@ -1,24 +1,15 @@
+#include <functional>
 #include <list>
 #include <map>
 #include <unordered_map>
+
+#include "common/Order.hpp"
+#include "common/OrderRequest.hpp"
 
 #ifndef EXCHANGE_MATCHING_ENGINE_HPP
 #define EXCHANGE_MATCHING_ENGINE_HPP
 
 namespace exchange {
-
-/* Represents a single Order
- *
- * Why a struct?
- * - lightweight data container
- * - frequently accessed in hot path
- */
-struct Order {
-  int id;       // unique order ID
-  int price;    // limit price
-  int quantity; // remaining quantity
-  bool isBuy;   // buy or sell
-};
 
 /* Engine that accepts orders: BUY, SELL, CANCEL
  * - matches orders based on best price
@@ -31,41 +22,61 @@ struct Order {
  */
 class MatchingEngine {
 public:
-  // Submits a BUY order
-  auto submitBuyOrder(int id, int price, int qty) -> void;
+  using OrderCb =
+      std::function<void(const std::string &id, const std::string &symbol, const common::OrderAction &action,
+                         const common::OrderSide &side, double price, int qty, bool isUserOrder)>;
+  using TradeCb = std::function<void(const std::string &symbol, double price, int qty, const std::string &sellSideId,
+                                     const std::string &buySideId)>;
 
-  // Submits a SELL order
-  auto submitSellOrder(int id, int price, int qty) -> void;
+  explicit MatchingEngine(std::string symbol, OrderCb orderCb, TradeCb tradeCb)
+      : mSymbol(std::move(symbol)), mOrderCb(std::move(orderCb)), mTradeCb(std::move(tradeCb)) {}
 
-  // CANCELs an order
-  auto cancel(int id) -> void;
+  // Handles adding of a new Order given an ID
+  auto addOrder(const std::string &id, const common::OrderRequest &request, bool isModify = false) -> void;
+
+  // Handles removing of an existing Order given an ID
+  auto cancelOrder(const std::string &id, bool isModify = false) -> void;
+
+  // Handles modifying of an existing Order given an ID (cancel -> add)
+  auto modifyOrder(const std::string &id, const common::OrderRequest &request) -> void;
 
 private:
+  // Matches an incoming BUY order to an existing SELL one for a Trade
+  auto matchBuyOrder(common::Order &order) -> bool;
+
+  // Matches an incoming SELL order to an existing BUY one for a Trade
+  auto matchSellOrder(common::Order &order) -> bool;
+
   // Adds Order to the appropriate book
-  auto addOrderToBook(int id, int price, int qty, bool isBuy) -> void;
+  auto addToBook(common::Order order) -> void;
 
-  /* Maps: OrderId -> iterator pointing to the order inside a list
-   * - allows fast lookup of orders by ID
-   *
-   * Why unordered_map?
-   * - allows O(1) lookup and cancels
-   * - order IDs are unique keys
-   */
-  std::unordered_map<int, std::list<Order>::iterator> mOrderIndex;
+  // Helper to fire an ADD msg to the feed
+  auto fireAdd(const common::Order &order, bool isUserOrder) -> void;
 
-  /* Maps: Price (high to low) -> FIFO queue of BUY orders
-   *
-   * Why map?
-   * - begin() always gives the highest price (best bid)
-   */
-  std::map<int, std::list<Order>, std::greater<int>> mBuyBook;
+  // Helper to fire a MODIFY msg to the feed
+  auto fireModify(const common::Order &order) -> void;
 
-  /* Maps: Price (low to high) -> FIFO queue of SELL orders
-   *
-   * Why map?
-   * - begin() always gives the lowest price (best ask)
-   */
-  std::map<int, std::list<Order>> mSellBook;
+  // Helper to fire a REMOVE msg to the feed
+  auto fireRemove(const common::Order &order) -> void;
+
+  // Helper to fire a TRADE msg to the feed
+  auto fireTrade(const std::string &sellSideId, const std::string &buySideId, double price, int qty) -> void;
+
+  // Symbol for the Book
+  std::string mSymbol;
+
+  // Callbacks for an raw Order Update msg or raw Trade Event msg
+  OrderCb mOrderCb;
+  TradeCb mTradeCb;
+
+  // Maps: OrderId -> iterator pointing to the order inside a list
+  std::unordered_map<std::string, std::list<common::Order>::iterator> mOrderIndex;
+
+  // Map of Prices -> FIFO list of BUY Orders (lowest price first)
+  std::map<double, std::list<common::Order>, std::greater<>> mBuyBook;
+
+  // Map of Prices -> FIFO list of SELL Orders (highest price first)
+  std::map<double, std::list<common::Order>, std::less<>> mSellBook;
 };
 
 } // namespace exchange

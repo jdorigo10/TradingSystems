@@ -14,7 +14,7 @@ namespace common {
 struct OrderUpdate {
   std::string id;     // Unique ID of the Order
   std::string symbol; // "AAPL"
-  OrderUpdateType type;
+  OrderAction action;
 
   // For ADD
   OrderSide side;
@@ -28,13 +28,13 @@ struct OrderUpdate {
   void print() const {
     // Allow 2 decimals
     std::cout << std::fixed << std::setprecision(2);
-    if (type == OrderUpdateType::ADD) {
-      std::cout << "ADD: " << id << " " << symbol << (side == OrderSide::BUY ? " BUY " : " SELL ") << "price=$" << price
-                << " qty=" << qty << (isUserOrder ? " [USER]" : "");
-    } else if (type == OrderUpdateType::MODIFY) {
-      std::cout << "MODIFY: " << id << " " << symbol << " price=$" << price << " qty=" << qty;
-    } else if (type == OrderUpdateType::REMOVE) {
-      std::cout << "REMOVE: " << id << " " << symbol;
+    if (action == OrderAction::ADD) {
+      std::cout << " ADD: " << id << " " << symbol << (side == OrderSide::BUY ? " BUY " : " SELL ") << "price=$"
+                << price << " qty=" << qty << (isUserOrder ? " [USER]" : "");
+    } else if (action == OrderAction::MODIFY) {
+      std::cout << " MODIFY: " << id << " " << symbol << " price=$" << price << " qty=" << qty;
+    } else if (action == OrderAction::REMOVE) {
+      std::cout << " REMOVE: " << id << " " << symbol;
     }
     std::cout << "\n" << std::endl;
   }

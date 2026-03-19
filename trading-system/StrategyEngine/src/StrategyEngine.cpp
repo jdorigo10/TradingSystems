@@ -39,28 +39,18 @@ auto StrategyEngine::generateOrder(const std::string &symbol) -> std::optional<c
   orderRequest.symbol = symbol;
   orderRequest.qty = determineOrderSize(*bestBid, *bestAsk);
 
-  if (std::abs(signal) > 0.05) {
-    // strong signal, act immediately
-    orderRequest.type = common::OrderRequestType::MARKET;
-  } else {
-    // try to capture spread
-    orderRequest.type = common::OrderRequestType::LIMIT;
-  }
-
   if (signal < -0.02) {
     // price is below VWAP → undervalued → BUY
     orderRequest.side = common::OrderSide::BUY;
 
-    // LIMIT: place at best bid to capture spread
-    // MARKET: price field can be ignored or set to best ask
-    orderRequest.price = (orderRequest.type == common::OrderRequestType::LIMIT) ? bestBid->price : bestAsk->price;
+    // For simplicity, all orders will be treated as LIMIT (TODO)
+    orderRequest.price = bestBid->price;
   } else if (signal > 0.02) {
     // price above VWAP → overvalued → SELL
     orderRequest.side = common::OrderSide::SELL;
 
-    // LIMIT: place at best ask to capture spread
-    // MARKET: price field can be ignored or set to best bid
-    orderRequest.price = (orderRequest.type == common::OrderRequestType::LIMIT) ? bestAsk->price : bestBid->price;
+    // For simplicity, all orders will be treated as LIMIT (TODO)
+    orderRequest.price = bestAsk->price;
   }
 
   orderRequest.print();

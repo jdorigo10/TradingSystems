@@ -9,6 +9,7 @@
 
 namespace common {
 
+// Represents a Live Order being Tracked
 struct LiveOrder {
   std::string id;     // Unique Order ID
   std::string symbol; // symbol: "AAPL"
@@ -22,7 +23,7 @@ struct LiveOrder {
   void print() const {
     // Allow 2 decimals
     std::cout << std::fixed << std::setprecision(2);
-    std::cout << "ORDER FILL: [" << id << "] ";
+    std::cout << " ORDER FILL: [" << id << "] ";
     std::cout << (side == OrderSide::BUY ? "BUY " : "SELL ") << symbol << " ";
     std::cout << filled << "/" << qty << "@$" << price;
     switch (status) {

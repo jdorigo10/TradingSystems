@@ -10,6 +10,7 @@
 
 namespace common {
 
+// Represents an Order item in a Book
 struct Order {
   std::string id;
   OrderSide side;

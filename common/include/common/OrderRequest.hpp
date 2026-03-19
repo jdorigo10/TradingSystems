@@ -9,11 +9,11 @@
 
 namespace common {
 
+// Represents an Order Request made for the Exchange
 struct OrderRequest {
   std::string symbol; // "AAPL"
 
   OrderSide side;
-  OrderRequestType type;
 
   double price = 0.0;
   int qty = 0;
@@ -23,9 +23,9 @@ struct OrderRequest {
   void print() const {
     // Allow 2 decimals
     std::cout << std::fixed << std::setprecision(2);
-    std::cout << "ORDER REQUEST: ";
+    std::cout << " ORDER REQUEST: ";
     std::cout << (side == OrderSide::BUY ? "BUY " : "SELL ") << symbol << " ";
-    std::cout << qty << "@$" << price << (type == OrderRequestType::MARKET ? " - MARKET" : " - LIMIT");
+    std::cout << qty << "@$" << price;
     std::cout << "\n" << std::endl;
   }
 };

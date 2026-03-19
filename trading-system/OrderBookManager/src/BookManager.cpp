@@ -26,7 +26,7 @@ auto OrderBookManager::getBook(const std::string &symbol) -> std::optional<Order
 
 auto OrderBookManager::snapshot(const std::string &symbol) -> void {
   if (auto it = mBooks.find(symbol); it != mBooks.end()) {
-    std::cout << it->first << " Book\n";
+    std::cout << " " << it->first << " Book\n";
     return it->second.snapshot();
   }
 }
